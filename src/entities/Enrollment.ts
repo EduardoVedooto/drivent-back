@@ -25,7 +25,7 @@ export default class Enrollment extends BaseEntity {
 
   @OneToOne(() => Address, (address) => address.enrollment, { eager: true })
   address: Address;
-
+  
   populateFromData(data: EnrollmentData) {
     this.name = data.name;
     this.cpf = data.cpf;

@@ -13,5 +13,5 @@ export default class TicketOption extends BaseEntity {
   price: number;
 
   @OneToMany(() => Booking, booking => booking.ticketOption)
-  bookings
+  bookings: Booking[]
 }

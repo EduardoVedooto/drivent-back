@@ -1,4 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import AccommodationTypeHotel from "./AccommodationTypeHotel";
 import Bed from "./Bed";
 import Room from "./Room";
 
@@ -15,4 +16,7 @@ export default class Hotel extends BaseEntity {
 
   @OneToMany(() => Bed, bed => bed.hotel)
   beds: Bed[];
+
+  @OneToMany(() => AccommodationTypeHotel, accommodationRelation => accommodationRelation.hotel)
+  accommodationRelations: AccommodationTypeHotel[];
 }

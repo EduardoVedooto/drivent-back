@@ -1,10 +1,8 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
-import Booking from "./Booking";
-import Room from "./Room";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import Hotel from "./Hotel";
 import AccommodationType from "./AccommodationType";
 
-@Entity("AccommodationTypeHotel")
+@Entity("accommodationTypeHotel")
 export default class AccommodationTypeHotel extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

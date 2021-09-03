@@ -7,8 +7,7 @@ import InvalidDataError from "@/errors/InvalidData";
 import ConflictError from "@/errors/ConflictError";
 import UnauthorizedError from "@/errors/Unauthorized";
 import NotFoundError from "@/errors/NotFoundError";
-import CannotPickHotelWithoutTicket from "@/errors/CannotPickHotelWithOnlineTicket";
-import CannotPickHotelWithoutPaying from "@/errors/CannotPickHotelWithoutPaying";
+import CannotPickHotelError from "@/errors/CannotPickHotelError";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware(
@@ -54,12 +53,10 @@ export default function errorHandlingMiddleware(
     });
   }
 
-  if (err instanceof CannotPickHotelWithoutTicket) {
-    return res.status(httpStatus.FORBIDDEN).send({ message: err.message });
-  }
-
-  if (err instanceof CannotPickHotelWithoutPaying) {
-    return res.status(httpStatus.FORBIDDEN).send({ message: err.message });
+  if (err instanceof CannotPickHotelError) {
+    return res
+      .status(httpStatus.FORBIDDEN)
+      .send({ message: err.message, details: err.details });
   }
 
   /* eslint-disable-next-line no-console */

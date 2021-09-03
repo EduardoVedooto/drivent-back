@@ -23,4 +23,11 @@ export default class Booking extends BaseEntity {
 
   @ManyToOne(() => HotelOption, hotelOption => hotelOption.bookings)
   hotelOption: HotelOption;
+  
+  @Column()
+  enrollmentId: number;
+
+  static async getByEnrollmentId(enrollmentId: number) {
+    return this.findOne({ where: { enrollmentId } });
+  }
 }

@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany } from "typeorm";
-import Bed from "./Bed";
+import BookingRoom from "./bookingRoom";
 import Hotel from "./Hotel";
 
 @Entity("rooms")
@@ -10,9 +10,12 @@ export default class Room extends BaseEntity {
   @Column()
   number: string;
 
+  @Column()
+  bedCount: number;
+
   @ManyToOne(() => Hotel, hotel => hotel.rooms)
   hotel: Hotel;
 
-  @OneToMany(() => Bed, bed => bed.room)
-  beds: Bed[];
+  @OneToMany(() => BookingRoom, bookingRoom => bookingRoom.room)
+  bookingRoom: BookingRoom[];
 }

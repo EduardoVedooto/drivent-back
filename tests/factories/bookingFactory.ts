@@ -1,26 +1,23 @@
 import Booking from "@/entities/Booking";
 import TicketOption from "@/entities/TicketOption";
 import HotelOption from "@/entities/HotelOption";
-import { createUser } from "./userFactory";
-import { createEnrollment } from "./enrollmentFactory";
+import Enrollment from "@/entities/Enrollment";
 
 export async function createBooking(params: {
   isPaid: boolean;
-  ticketOptionId: number;
-  hotelOptionId: number;
+  ticketOptionType: string;
+  hotelOptionType: boolean;
   hasHotel: boolean;
+  enrollment: Enrollment
 }) {
-  const { isPaid, ticketOptionId, hotelOptionId, hasHotel } = params;
-
-  const user = await createUser();
-  const enrollment = await createEnrollment(user);
+  const { isPaid, ticketOptionType, hotelOptionType, hasHotel, enrollment } = params;
 
   const ticketOption = await TicketOption.findOne({
-    where: { id: ticketOptionId },
+    where: { type: ticketOptionType },
   });
 
   const hotelOption = await HotelOption.findOne({
-    where: { id: hotelOptionId },
+    where: { hasHotel: hotelOptionType },
   });
 
   const data = {

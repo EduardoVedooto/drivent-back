@@ -44,7 +44,10 @@ export default class Booking extends BaseEntity {
     let booking = await this.findOne({ where: { enrollmentId: data.enrollment.id } });
 
     booking ||= Booking.create();
+
     booking.populateFromData(data);
     await booking.save();
+
+    return booking;
   }
 }

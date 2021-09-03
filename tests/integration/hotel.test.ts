@@ -1,12 +1,13 @@
 import supertest from "supertest";
 
 import app, { init } from "@/app";
-import Setting from "@/entities/Setting";
-import Enrollment from "@/entities/Enrollment";
 import { clearDatabase, endConnection } from "../utils/database";
-import { createBasicSettings } from "../utils/app";
+import { createAuthHeader, createBasicHotelOptions, createBasicHotels, createBasicSettings, createBasicTicketOptions } from "../utils/app";
 import { createUser } from "../factories/userFactory";
 import { createBooking } from "../factories/bookingFactory";
+import { createEnrollment } from "../factories/enrollmentFactory";
+import Session from "@/entities/Session";
+import { createToken } from "@/utils/app";
 
 const agent = supertest(app);
 let settings = null;
@@ -18,6 +19,9 @@ beforeAll(async () => {
 beforeEach(async () => {
   await clearDatabase();
   settings = await createBasicSettings();
+  await createBasicHotels();
+  await createBasicHotelOptions();
+  await createBasicTicketOptions();
 });
 
 afterAll(async () => {
@@ -27,21 +31,18 @@ afterAll(async () => {
 
 describe("GET /hotels", () => {
   it("should return status 403 when no payment has been made", async () => {
-    const booking = await createBooking({
+    const user = await createUser();
+    const token = createToken(user.id);
+    await Session.createNew(user.id, token);
+    const enrollment = await createEnrollment(user);
+    await createBooking({
       isPaid: false,
-      hotelOptionId: 1,
-      ticketOptionId: 1,
+      hotelOptionType: true,
+      ticketOptionType: "Online",
       hasHotel: false,
+      enrollment
     });
-
-    console.log(booking);
-    // const response = await agent.get("/event");
-    // expect(response.body).toEqual({
-    //   startDate: await getSettingValue("start_date"),
-    //   endDate: await getSettingValue("end_date"),
-    //   eventTitle: await getSettingValue("event_title"),
-    //   backgroundImage: await getSettingValue("background_image"),
-    //   logoImage: await getSettingValue("logo_image"),
-    // });
+    const response = await agent.get("/hotels").set(createAuthHeader(token));
+    expect(response.status).toEqual(403);
   });
 });

@@ -9,6 +9,9 @@ export default class Hotel extends BaseEntity {
   @Column()
   name: string;
 
+  @Column()
+  imgUrl: string;
+
   @OneToMany(() => Room, room => room.hotel)
   rooms: Room[];
 }

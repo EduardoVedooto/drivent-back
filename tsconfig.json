@@ -12,7 +12,7 @@
     },
     "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
-  "include": ["src"],
+  "include": ["src", "tests"],
   "plugins": [
     {
       "transform": "typescript-transform-paths"

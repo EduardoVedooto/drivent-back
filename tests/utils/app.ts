@@ -81,3 +81,9 @@ export async function createBasicHotelOptions() {
 
   await HotelOption.save([ho1, ho2]);
 }
+
+export function createAuthHeader(token: string) {
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}

@@ -1,0 +1,9 @@
+seeds:
+    - HotelOption:
+        id: 1
+        hasHotel: false
+        price: 0
+    - HotelOption:
+        id: 2
+        hasHotel: true
+        price: 35000

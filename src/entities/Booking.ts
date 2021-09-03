@@ -1,6 +1,6 @@
+import BookingInfo from "@/interfaces/bookingInfo";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import Enrollment from "./Enrollment";
-import HotelOption from "./HotelOptions";
 import TicketOption from "./TicketOptions";
 
 @Entity("bookings")
@@ -12,7 +12,10 @@ export default class Booking extends BaseEntity {
   isPaid: boolean;
 
   @Column()
-  hasHotel: boolean;
+  enrollmentId: number;
+
+  @Column()
+  ticketOptionId: number;
 
   @ManyToOne(() => TicketOption, ticketOption => ticketOption.bookings)
   ticketOption: TicketOption;
@@ -21,6 +24,17 @@ export default class Booking extends BaseEntity {
   @JoinColumn()
   enrollment: Enrollment;
 
-  @ManyToOne(() => HotelOption, hotelOption => hotelOption.bookings)
-  hotelOption: HotelOption;
+  static async createNew( { enrollmentId, ticketOptionId }: BookingInfo ) {
+    const reservation = {
+      isPaid: false,
+      ticketOptionId,
+      enrollmentId
+    };
+
+    console.log(reservation);
+
+    const booking = Booking.create(reservation);
+    await booking.save();
+    return booking;
+  }
 }

@@ -1,0 +1,13 @@
+seeds:
+    - Hotel:
+        id: 1
+        name: "Driven Resort"
+        imgUrl: "https://i.imgur.com/ZCBgNGO.png"
+    - Hotel:
+        id: 2
+        name: "Driven Palace"
+        imgUrl: "https://i.imgur.com/i2dp2Rb.png"
+    - Hotel:
+        id: 3
+        name: "Driven World"
+        imgUrl: "https://i.imgur.com/HuGh8VQ.png"

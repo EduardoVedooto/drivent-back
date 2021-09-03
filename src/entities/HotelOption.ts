@@ -7,7 +7,7 @@ export default class HotelOption extends BaseEntity {
   id: number;
 
   @Column()
-  hasHotel: string;
+  hasHotel: boolean;
 
   @Column()
   price: number;

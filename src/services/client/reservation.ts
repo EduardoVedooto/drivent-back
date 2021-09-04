@@ -1,10 +1,15 @@
 import Booking from "@/entities/Booking";
 import BookingInfo from "@/interfaces/bookingInfo";
 import BodyInfoForBooking from "@/interfaces/bodyInfoForBooking";
+import Enrollment from "@/entities/Enrollment";
 
 export async function createReservation({ type, hotel, enrollmentId }: BodyInfoForBooking) {
   const ticketOptionId = getTicketOptionId(type);
   const hotelOptionId = getHotelOptionId(hotel);
+
+  const existingEnrollmentId = await Enrollment.find({ where: { id: enrollmentId } });
+  if (existingEnrollmentId.length === 0) return false;
+
   const bookingInfo = { enrollmentId, ticketOptionId, hotelOptionId } as BookingInfo;
 
   const reservation = await Booking.createNew(bookingInfo);

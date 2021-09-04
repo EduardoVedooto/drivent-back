@@ -8,6 +8,7 @@ export async function createReservation(req: Request, res: Response) {
   const { type, hotel, enrollmentId } = req.body as BodyInfoForBooking;
 
   const reservation = await service.createReservation({ type, hotel, enrollmentId });
+  if(!reservation) return res.sendStatus(httpStatus.NOT_FOUND);
 
   res.status(httpStatus.CREATED).send(reservation);
 }

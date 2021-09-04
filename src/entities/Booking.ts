@@ -3,6 +3,7 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColu
 import Enrollment from "./Enrollment";
 import TicketOption from "./TicketOption";
 import HotelOption from "./hotelOption";
+import ConflictError from "@/errors/ConflictError";
 
 @Entity("bookings")
 export default class Booking extends BaseEntity {
@@ -39,7 +40,12 @@ export default class Booking extends BaseEntity {
       hotelOptionId
     };
 
-    //checar se enrollmentId existe
+    const existingBooking = await Booking.findOne({
+      where: { enrollmentId }
+    });
+    if( existingBooking ) {
+      throw new ConflictError("Participante já realizou uma reserva!");
+    }
 
     const createBooking = Booking.create(reservation);
     const saveBooking = await createBooking.save();

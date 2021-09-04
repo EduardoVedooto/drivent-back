@@ -1,7 +1,8 @@
 import BookingInfo from "@/interfaces/bookingInfo";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import Enrollment from "./Enrollment";
-import TicketOption from "./TicketOptions";
+import TicketOption from "./TicketOption";
+import HotelOption from "./hotelOption";
 
 @Entity("bookings")
 export default class Booking extends BaseEntity {
@@ -17,24 +18,34 @@ export default class Booking extends BaseEntity {
   @Column()
   ticketOptionId: number;
 
-  @ManyToOne(() => TicketOption, ticketOption => ticketOption.bookings)
-  ticketOption: TicketOption;
+  @Column()
+  hotelOptionId: number;
 
   @OneToOne(() => Enrollment)
   @JoinColumn()
   enrollment: Enrollment;
 
-  static async createNew( { enrollmentId, ticketOptionId }: BookingInfo ) {
+  @ManyToOne(() => TicketOption, ticketOption => ticketOption.bookings)
+  ticketOption: TicketOption;
+
+  @ManyToOne(() => HotelOption, hotelOption => hotelOption.bookings)
+  hotelOption: HotelOption;
+
+  static async createNew( { enrollmentId, ticketOptionId, hotelOptionId }: BookingInfo ) {
     const reservation = {
       isPaid: false,
+      enrollmentId,
       ticketOptionId,
-      enrollmentId
+      hotelOptionId
     };
 
-    console.log(reservation);
+    const createBooking = Booking.create(reservation);
+    const saveBooking = await createBooking.save();
 
-    const booking = Booking.create(reservation);
-    await booking.save();
+    const booking = Booking.find({
+      relations: ["ticketOption", "hotelOption"],
+      where: { id: saveBooking.id }
+    });
     return booking;
   }
 }

@@ -3,26 +3,36 @@ import BookingInfo from "@/interfaces/bookingInfo";
 import BodyInfoForBooking from "@/interfaces/bodyInfoForBooking";
 
 export async function createReservation({ type, hotel, enrollmentId }: BodyInfoForBooking) {
-  const ticketOptionId = getTicketOptionId(type, hotel);
-  const bookingInfo = { enrollmentId, ticketOptionId } as BookingInfo;
+  const ticketOptionId = getTicketOptionId(type);
+  const hotelOptionId = getHotelOptionId(hotel);
+  const bookingInfo = { enrollmentId, ticketOptionId, hotelOptionId } as BookingInfo;
 
   const reservation = await Booking.createNew(bookingInfo);
   return reservation;
 }
 
-function getTicketOptionId( type: string, hotel: boolean) {
+function getTicketOptionId( type: string) {
   let ticketOptionId;
-  if (type === "presencial" && hotel === true) {
-    ticketOptionId = 3;
-  }
-
-  if (type === "presencial" && hotel === false) {
-    ticketOptionId = 2;
-  }
-
-  if ( type === "online") {
+  if (type === "online") {
     ticketOptionId = 1;
   }
 
+  if (type === "presencial") {
+    ticketOptionId = 2;
+  }
+
   return ticketOptionId;
+}
+
+function getHotelOptionId(hotel: boolean) {
+  let hotelOptionId;
+  if (hotel === false) {
+    hotelOptionId = 1;
+  }
+
+  if (hotel === true) {
+    hotelOptionId = 2;
+  }
+
+  return hotelOptionId;
 }

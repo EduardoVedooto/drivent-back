@@ -39,13 +39,21 @@ export default class Booking extends BaseEntity {
       hotelOptionId
     };
 
+    //checar se enrollmentId existe
+
     const createBooking = Booking.create(reservation);
     const saveBooking = await createBooking.save();
 
-    const booking = Booking.find({
+    const booking = await Booking.findOne({
       relations: ["ticketOption", "hotelOption"],
       where: { id: saveBooking.id }
     });
+
+    delete booking.hotelOptionId;
+    delete booking.ticketOptionId;
+    delete booking.ticketOption.id;
+    delete booking.hotelOption.id;
+    
     return booking;
   }
 }

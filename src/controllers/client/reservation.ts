@@ -22,3 +22,9 @@ export async function findReservation(req: Request, res: Response) {
 
   res.status(httpStatus.OK).send(reservation);
 }
+
+export async function getAllReservations(req: Request, res: Response) {
+  const reservations = await service.getAllReservations();
+
+  res.status(httpStatus.OK).send(reservations);
+}

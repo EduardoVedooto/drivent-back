@@ -22,6 +22,11 @@ export async function findByEnrollmentId(enrollmentId: number) {
   return reservation;
 }
 
+export async function getAllReservations() {
+  const reservation = await Booking.findAll();
+  return reservation;
+}
+
 function getTicketOptionId( type: string) {
   let ticketOptionId;
   if (type === "online") {

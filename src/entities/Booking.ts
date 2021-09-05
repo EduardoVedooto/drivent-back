@@ -4,6 +4,8 @@ import Enrollment from "./Enrollment";
 import TicketOption from "./TicketOption";
 import HotelOption from "./hotelOption";
 import ConflictError from "@/errors/ConflictError";
+import NotFoundBooking from "@/errors/NotFoundBooking";
+import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 
 @Entity("bookings")
 export default class Booking extends BaseEntity {
@@ -52,6 +54,31 @@ export default class Booking extends BaseEntity {
 
     const booking = await this.findByEnrollmentId( enrollmentId );
     return booking;
+  }
+
+  static async confirmPayment( bookingId: number ) {
+    const booking = await Booking.findOne({
+      where: { id: bookingId },
+    });
+
+    if (!booking) {
+      throw new NotFoundBooking();
+    }
+
+    if (booking.isPaid === true) {
+      const alreadyPaidBooking = await Booking.findOne({
+        relations: ["enrollment"],
+        where: { id: bookingId },
+      });
+
+      throw new AlreadyPaidBooking(alreadyPaidBooking.enrollment.name);
+    }
+
+    await Booking.createQueryBuilder()
+      .update(this)
+      .set({ isPaid: true })
+      .where({ id: bookingId })
+      .execute();
   }
 
   static async findByEnrollmentId( enrollmentId: number ) {

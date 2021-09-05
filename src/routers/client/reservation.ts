@@ -7,5 +7,6 @@ const router = Router();
 router.post("/",  controller.createReservation);
 router.get("/",  controller.getAllReservations);
 router.get("/:enrollmentId/find",  controller.findReservation);
+router.post("/:bookingId/payment",  controller.updatePaymentStatus);
 
 export default router;

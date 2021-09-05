@@ -27,6 +27,10 @@ export async function getAllReservations() {
   return reservation;
 }
 
+export async function updatePaymentStatus(bookingId: number) {
+  const reservation = await Booking.confirmPayment(bookingId);
+}
+
 function getTicketOptionId( type: string) {
   let ticketOptionId;
   if (type === "online") {

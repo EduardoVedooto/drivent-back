@@ -13,6 +13,15 @@ export async function createReservation(req: Request, res: Response) {
   res.status(httpStatus.CREATED).send(reservation);
 }
 
+export async function updatePaymentStatus(req: Request, res: Response) {
+  const bookingId = Number(req.params.bookingId);
+  if (isNaN(bookingId) || !bookingId) return res.status(httpStatus.BAD_REQUEST); //verificar depois
+
+  const reservations = await service.updatePaymentStatus(bookingId);
+
+  res.status(httpStatus.OK).send(reservations);
+}
+
 export async function findReservation(req: Request, res: Response) {
   const enrollmentId = Number(req.params.enrollmentId);
   // if (isNaN(enrollmentId) || !enrollmentId) return res.status(httpStatus.BAD_REQUEST); verificar depois

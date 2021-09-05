@@ -64,7 +64,22 @@ export default class Booking extends BaseEntity {
     delete booking?.ticketOptionId;
     delete booking?.ticketOption.id;
     delete booking?.hotelOption.id;
-    console.log(booking);
+
+    return booking;
+  }
+
+  static async findAll() {
+    const booking = await Booking.find({
+      relations: ["ticketOption", "hotelOption"],
+    });
+
+    booking.forEach(b => {
+      delete b?.hotelOptionId;
+      delete b?.ticketOptionId;
+      delete b?.ticketOption.id;
+      delete b?.hotelOption.id;
+    });
+    
     return booking;
   }
 }

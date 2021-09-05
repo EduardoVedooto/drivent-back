@@ -1,6 +1,7 @@
 import faker from "faker";
 
 import User from "@/entities/User";
+import Session from "@/entities/Session";
 
 export async function createUser() {
   const user = User.create({
@@ -9,6 +10,16 @@ export async function createUser() {
   });
 
   await user.save();
-  
   return user;
+}
+
+export async function createSession(userId: number) {
+   const session = Session.create({
+    userId,
+    token: "fakeToken123456#%&&",
+  });
+
+  await session.save();
+
+  return session;
 }

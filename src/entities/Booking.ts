@@ -60,11 +60,11 @@ export default class Booking extends BaseEntity {
       where: { enrollmentId }
     });
 
-    delete booking.hotelOptionId;
-    delete booking.ticketOptionId;
-    delete booking.ticketOption.id;
-    delete booking.hotelOption.id;
-    
+    delete booking?.hotelOptionId;
+    delete booking?.ticketOptionId;
+    delete booking?.ticketOption.id;
+    delete booking?.hotelOption.id;
+    console.log(booking);
     return booking;
   }
 }

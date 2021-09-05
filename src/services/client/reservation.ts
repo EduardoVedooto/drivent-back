@@ -16,6 +16,12 @@ export async function createReservation({ type, hotel, enrollmentId }: BodyInfoF
   return reservation;
 }
 
+export async function findByEnrollmentId(enrollmentId: number) {
+  const reservation = await Booking.findByEnrollmentId(enrollmentId);
+  if(!reservation) return false;
+  return reservation;
+}
+
 function getTicketOptionId( type: string) {
   let ticketOptionId;
   if (type === "online") {

@@ -13,3 +13,12 @@ export async function createReservation(req: Request, res: Response) {
   res.status(httpStatus.CREATED).send(reservation);
 }
 
+export async function findReservation(req: Request, res: Response) {
+  const enrollmentId = Number(req.params.enrollmentId);
+  // if (isNaN(enrollmentId) || !enrollmentId) return res.status(httpStatus.BAD_REQUEST); verificar depois
+
+  const reservation = await service.findByEnrollmentId(enrollmentId);
+  if(!reservation) return res.sendStatus(httpStatus.NOT_FOUND);
+
+  res.status(httpStatus.OK).send(reservation);
+}

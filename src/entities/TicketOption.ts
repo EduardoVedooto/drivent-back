@@ -17,14 +17,14 @@ export default class TicketOption extends BaseEntity {
 
   static async getTicketOptionId( type: string) {
     let ticketOptionId;
-    const ticketOptionIdOnline = await TicketOption.findOne({ where: { type: "online" } });
-    const ticketOptionIdPresencial = await TicketOption.findOne({ where: { type: "presencial" } });
+    const ticketOptionIdOnline = await TicketOption.findOne({ where: { type: "Online" } });
+    const ticketOptionIdPresencial = await TicketOption.findOne({ where: { type: "Presencial" } });
     
-    if (type === "online") {
+    if (type === "Online") {
       ticketOptionId = ticketOptionIdOnline.id;
     }
   
-    if (type === "presencial") {
+    if (type === "Presencial") {
       ticketOptionId = ticketOptionIdPresencial.id;
     }
   

@@ -1,9 +1,9 @@
 seeds:
     - TicketOption:
         id: 1
-        type: "online"
+        type: "Online"
         price: 10000
     - TicketOption:
         id: 2
-        type: "presencial"
+        type: "Presencial"
         price: 25000

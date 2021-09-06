@@ -38,7 +38,7 @@ async function generateData() {
   const body = {
     enrollmentId: enrollment.id,
     hotel: true,
-    type: "presencial",
+    type: "Presencial",
   };
 
   return { user, session, enrollment, body };
@@ -60,11 +60,11 @@ describe("POST /booking", () => {
         isPaid: false,
         enrollmentId: enrollment.id,
         ticketOption: expect.objectContaining({
-          type: "presencial",
+          type: "Presencial",
           price: 25000,
         }),
         hotelOption: expect.objectContaining({
-          name: "drivent",
+          name: "Drivent",
           price: 35000,
         }),
       })

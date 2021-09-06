@@ -58,11 +58,11 @@ export async function createBasicHotels() {
 
 export async function createBasicTicketOptions() {
   const to1 = TicketOption.create({
-    type: "online",
+    type: "Online",
     price: 10000,
   });
   const to2 = TicketOption.create({
-    type: "presencial",
+    type: "Presencial",
     price: 25000,
   });
 
@@ -71,11 +71,11 @@ export async function createBasicTicketOptions() {
 
 export async function createBasicHotelOptions() {
   const ho1 = HotelOption.create({
-    name: "sem hotel",
+    name: "Sem hotel",
     price: 0,
   });
   const ho2 = HotelOption.create({
-    name: "drivent",
+    name: "Drivent",
     price: 35000,
   });
 

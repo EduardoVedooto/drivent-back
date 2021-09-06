@@ -10,6 +10,7 @@ import Room from "./Room";
 import Booking from "./Booking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 import NotFoundError from "@/errors/NotFoundError";
+import HotelData from "@/interfaces/hotel";
 
 @Entity("hotels")
 export default class Hotel extends BaseEntity {
@@ -22,7 +23,7 @@ export default class Hotel extends BaseEntity {
   @Column()
   imgUrl: string;
 
-  @OneToMany(() => Room, (room) => room.hotel)
+  @OneToMany(() => Room, (room) => room.hotel, { eager: true })
   rooms: Room[];
 
   static async getHotelsForUser(userId: number) {
@@ -36,6 +37,16 @@ export default class Hotel extends BaseEntity {
     if (!booking?.isPaid) {
       throw new CannotPickHotelError(details);
     }
-    return this.find();
+    const hotels = await this.find() as HotelData[];
+    hotels.forEach((hotel) => this.addAccommodationType(hotel));
+    return hotels;
+  }
+
+  static addAccommodationType(hotel: HotelData) {
+    const accommodations = [];
+    if(hotel.rooms.find(room => room.bedCount === 1)) accommodations.push("Single");
+    if(hotel.rooms.find(room => room.bedCount === 2)) accommodations.push("Double");
+    if(hotel.rooms.find(room => room.bedCount === 3)) accommodations.push("Triple");
+    hotel.accommodationsType = accommodations;
   }
 }

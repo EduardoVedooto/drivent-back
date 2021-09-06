@@ -66,7 +66,7 @@ export async function createBasicTicketOptions() {
     price: 25000,
   });
 
-  await TicketOption.save([to1, to2]);
+  return await TicketOption.save([to1, to2]);
 }
 
 export async function createBasicHotelOptions() {
@@ -79,7 +79,7 @@ export async function createBasicHotelOptions() {
     price: 35000,
   });
 
-  await HotelOption.save([ho1, ho2]);
+  return await HotelOption.save([ho1, ho2]);
 }
 
 export function createAuthHeader(token: string) {

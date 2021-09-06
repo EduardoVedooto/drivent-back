@@ -6,7 +6,6 @@ import ConflictError from "@/errors/ConflictError";
 import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import BookingInfo from "@/interfaces/bookingInfo";
-import BookingData from "@/interfaces/booking";
 
 @Entity("bookings")
 export default class Booking extends BaseEntity {
@@ -113,23 +112,5 @@ export default class Booking extends BaseEntity {
 
   static async getByEnrollmentId(enrollmentId: number) {
     return this.findOne({ where: { enrollmentId } });
-  }
-
-  populateFromData(data: BookingData) {
-    this.isPaid = data.isPaid;
-    this.ticketOption = data.ticketOption;
-    this.enrollment = data.enrollment;
-    this.hotelOption = data.hotelOption;
-  }
-
-  static async createOrUpdate(data: BookingData) {
-    let booking = await this.findOne({ where: { enrollmentId: data.enrollment.id } });
-
-    booking ||= Booking.create();
-
-    booking.populateFromData(data);
-    await booking.save();
-
-    return booking;
   }
 }

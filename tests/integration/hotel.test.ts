@@ -34,14 +34,8 @@ describe("GET /hotels", () => {
     const user = await createUser();
     const token = createToken(user.id);
     await Session.createNew(user.id, token);
-    const enrollment = await createEnrollment(user);
-    await createBooking({
-      isPaid: false,
-      hotelOptionType: true,
-      ticketOptionType: "Online",
-      hasHotel: false,
-      enrollment
-    });
+    const enrollment = await createEnrollment(user.id);
+    await createBooking(enrollment.id);
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(403);
   });

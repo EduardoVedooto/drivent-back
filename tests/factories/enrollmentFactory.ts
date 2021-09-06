@@ -6,7 +6,9 @@ export async function createEnrollment(userId: number) {
   const enrollmentData = {
     name: faker.name.findName(),
     cpf: "012.345.678-90",
-    birthday: faker.date.past(),
+    birthday: "01-09-2021",
+    phone: faker.phone.phoneNumber(),
+    userId,
     address: {
       cep: faker.address.zipCode(),
       street: faker.address.streetName(),
@@ -15,12 +17,10 @@ export async function createEnrollment(userId: number) {
       state: faker.address.state(),
       neighborhood: faker.address.cityName(),
       addressDetail: faker.lorem.word(),
-    },
-    phone: faker.phone.phoneNumber(),
-    userId,
+    }
   };
-
   const enrollment = await Enrollment.create(enrollmentData);
   await enrollment.save();
+  
   return enrollment;
 }

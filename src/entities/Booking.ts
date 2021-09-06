@@ -2,7 +2,7 @@ import BookingInfo from "@/interfaces/bookingInfo";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import Enrollment from "./Enrollment";
 import TicketOption from "./TicketOption";
-import HotelOption from "./hotelOption";
+import HotelOption from "./HotelOption";
 import ConflictError from "@/errors/ConflictError";
 import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";

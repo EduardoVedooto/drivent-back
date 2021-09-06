@@ -15,7 +15,7 @@ export async function createReservation(req: Request, res: Response) {
 
 export async function updatePaymentStatus(req: Request, res: Response) {
   const bookingId = Number(req.params.bookingId);
-  if (isNaN(bookingId) || !bookingId) return res.status(httpStatus.BAD_REQUEST); //verificar depois
+  //if (isNaN(bookingId) || !bookingId) return res.status(httpStatus.BAD_REQUEST); //verificar depois
 
   const reservations = await service.updatePaymentStatus(bookingId);
 

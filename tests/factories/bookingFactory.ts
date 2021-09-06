@@ -3,7 +3,7 @@ import {createBasicHotelOptions, createBasicTicketOptions} from "../utils/app";
 
 export async function createBooking(enrollmentId: number) {
 
-    const hotelOption = await createBasicHotelOptions(); //await HotelOption.findOne
+    const hotelOption = await createBasicHotelOptions();
     const hotelOptionId = hotelOption[0].id;
     
     const ticketOption = await createBasicTicketOptions();

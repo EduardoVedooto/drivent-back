@@ -38,7 +38,11 @@ export default class Hotel extends BaseEntity {
       throw new CannotPickHotelError(details);
     }
     const hotels = await this.find() as HotelData[];
-    hotels.forEach((hotel) => this.addAccommodationType(hotel));
+    hotels.forEach((hotel) => {
+      this.addAccommodationType(hotel);
+      this.bedsAvailable(hotel);
+      delete hotel.rooms;
+    });
     return hotels;
   }
 
@@ -48,5 +52,12 @@ export default class Hotel extends BaseEntity {
     if(hotel.rooms.find(room => room.bedCount === 2)) accommodations.push("Double");
     if(hotel.rooms.find(room => room.bedCount === 3)) accommodations.push("Triple");
     hotel.accommodationsType = accommodations;
+  }
+
+  static bedsAvailable(hotel: HotelData) {
+    let guests = 0;
+    const maxAvailable: number[] = hotel.rooms.map((room) =>  room.bedCount - room.bookingRoom.length);
+    guests = maxAvailable.reduce((acc, value) => acc + value, 0);
+    hotel.beds = guests;
   }
 }

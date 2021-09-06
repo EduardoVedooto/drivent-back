@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 
 import * as sessionService from "@/services/client/session";
 import UnauthorizedError from "@/errors/Unauthorized";
-import ConflictError from "@/errors/ConflictError";
 
 interface JwtPayload {
     userId: number

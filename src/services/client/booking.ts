@@ -7,7 +7,7 @@ import HotelOption from "@/entities/HotelOption";
 
 export async function createBooking({ type, hotel, enrollmentId }: BodyInfoForBooking) {
   const ticketOptionId = await TicketOption.getTicketOptionId(type);
-  const hotelOptionId = await getHotelOptionId(hotel);
+  const hotelOptionId = await HotelOption.getHotelOptionId(hotel);
 
   const existingEnrollmentId = await Enrollment.find({ where: { id: enrollmentId } });
   if (existingEnrollmentId.length === 0) return false;
@@ -31,20 +31,4 @@ export async function getAllBookings() {
 
 export async function updatePaymentStatus(bookingId: number) {
   const booking = await Booking.confirmPayment(bookingId);
-}
-
-async function getHotelOptionId(hotel: boolean) {
-  let hotelOptionId;
-  const hotelOptionIdOnline = await HotelOption.findOne({ where: { name: "sem hotel" } });
-  const hotelOptionIdPresencial = await HotelOption.findOne({ where: { name: "drivent" } });
- 
-  if (hotel === false) {
-    hotelOptionId = hotelOptionIdOnline.id;
-  }
-
-  if (hotel === true) {
-    hotelOptionId = hotelOptionIdPresencial.id;
-  }
-
-  return hotelOptionId;
 }

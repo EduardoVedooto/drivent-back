@@ -36,7 +36,7 @@ export default class Booking extends BaseEntity {
   hotelOption: HotelOption;
 
   static async createNew( { enrollmentId, ticketOptionId, hotelOptionId }: BookingInfo ) {
-    const reservation = {
+    const bookingInfo = {
       isPaid: false,
       enrollmentId,
       ticketOptionId,
@@ -50,7 +50,7 @@ export default class Booking extends BaseEntity {
       throw new ConflictError("Participante já realizou uma reserva!");
     }
 
-    const createBooking = Booking.create(reservation);
+    const createBooking = Booking.create(bookingInfo);
     await createBooking.save();
 
     const booking = await this.findByEnrollmentId( enrollmentId );

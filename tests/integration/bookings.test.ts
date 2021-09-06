@@ -44,12 +44,12 @@ async function generateData() {
   return { user, session, enrollment, body };
 }
 
-describe("POST /reservation", () => {
-  it("should create a new reservation when receive a valid body", async () => {
+describe("POST /booking", () => {
+  it("should create a new booking when receive a valid body", async () => {
     const { session, enrollment, body } = await generateData();
 
     const response = await agent
-      .post("/reservation")
+      .post("/booking")
       .send(body)
       .set("Authorization", `Bearer ${session.token}`);
 
@@ -77,23 +77,23 @@ describe("POST /reservation", () => {
     body.enrollmentId = enrollment.id + 10;
 
     const response = await agent
-      .post("/reservation")
+      .post("/booking")
       .send(body)
       .set("Authorization", `Bearer ${session.token}`);
 
     expect(response.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
 
-  it("should return CONFLICT (409) for reservations that are already done", async () => {
+  it("should return CONFLICT (409) for bookings that are already done", async () => {
     const { session, body } = await generateData();
 
     await agent
-      .post("/reservation")
+      .post("/booking")
       .send(body)
       .set("Authorization", `Bearer ${session.token}`);
 
     const response = await agent
-      .post("/reservation")
+      .post("/booking")
       .send(body)
       .set("Authorization", `Bearer ${session.token}`);
 
@@ -101,14 +101,14 @@ describe("POST /reservation", () => {
   });
 });
 
-describe("GET /reservation", () => {
+describe("GET /booking", () => {
   it("should return an array containing all booking", async () => {
     const { session, enrollment } = await generateData();
 
     await createBooking(enrollment.id);
 
     const response = await agent
-      .get("/reservation")
+      .get("/booking")
       .set("Authorization", `Bearer ${session.token}`);
 
     expect(response.statusCode).toEqual(httpStatus.OK);
@@ -135,7 +135,7 @@ describe("GET /reservation", () => {
     const { session } = await generateData();
 
     const response = await agent
-      .get("/reservation")
+      .get("/booking")
       .set("Authorization", `Bearer ${session.token}`);
 
     expect(response.statusCode).toEqual(httpStatus.OK);
@@ -143,14 +143,14 @@ describe("GET /reservation", () => {
   });
 });
 
-describe("GET /reservation/:enrollmentId/find", () => {
+describe("GET /booking/:enrollmentId/find", () => {
   it("should return an object with booking info for an specific enrollmentId", async () => {
     const { session, enrollment } = await generateData();
 
     await createBooking(enrollment.id);
 
     const response = await agent
-      .get(`/reservation/${enrollment.id}/find`)
+      .get(`/booking/${enrollment.id}/find`)
       .set("Authorization", `Bearer ${session.token}`);
 
     expect(response.statusCode).toEqual(httpStatus.OK);
@@ -175,7 +175,7 @@ describe("GET /reservation/:enrollmentId/find", () => {
     const { session, enrollment } = await generateData();
 
     const response = await agent
-      .get(`/reservation/${enrollment.id + 10}/find`)
+      .get(`/booking/${enrollment.id + 10}/find`)
       .set("Authorization", `Bearer ${session.token}`);
 
     expect(response.statusCode).toEqual(httpStatus.NOT_FOUND);
@@ -185,21 +185,21 @@ describe("GET /reservation/:enrollmentId/find", () => {
     const { session, enrollment } = await generateData();
 
     const response = await agent
-      .get(`/reservation/${enrollment.id}/find`)
+      .get(`/booking/${enrollment.id}/find`)
       .set("Authorization", `Bearer ${session.token}`);
 
     expect(response.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
 });
 
-describe("POST /reservation/:bookingId/payment", () => {
+describe("POST /booking/:bookingId/payment", () => {
   it("should return status OK (201) when receives payment", async () => {
     const { session, enrollment } = await generateData();
 
     const booking = await createBooking(enrollment.id);
 
     const response = await agent
-      .post(`/reservation/${booking.id}/payment`)
+      .post(`/booking/${booking.id}/payment`)
       .send({})
       .set("Authorization", `Bearer ${session.token}`);
 
@@ -212,12 +212,12 @@ describe("POST /reservation/:bookingId/payment", () => {
     const booking = await createBooking(enrollment.id);
 
     await agent
-      .post(`/reservation/${booking.id}/payment`)
+      .post(`/booking/${booking.id}/payment`)
       .send({})
       .set("Authorization", `Bearer ${session.token}`);
 
     const response = await agent
-      .post(`/reservation/${booking.id}/payment`)
+      .post(`/booking/${booking.id}/payment`)
       .send({})
       .set("Authorization", `Bearer ${session.token}`);
 
@@ -229,7 +229,7 @@ describe("POST /reservation/:bookingId/payment", () => {
 
     const notExistingBookingId = 123456789;
     const response = await agent
-      .post(`/reservation/${notExistingBookingId}/payment`)
+      .post(`/booking/${notExistingBookingId}/payment`)
       .send({})
       .set("Authorization", `Bearer ${session.token}`);
 

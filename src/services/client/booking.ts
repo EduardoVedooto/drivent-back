@@ -5,7 +5,7 @@ import Enrollment from "@/entities/Enrollment";
 import TicketOption from "@/entities/TicketOption";
 import HotelOption from "@/entities/HotelOption";
 
-export async function createReservation({ type, hotel, enrollmentId }: BodyInfoForBooking) {
+export async function createBooking({ type, hotel, enrollmentId }: BodyInfoForBooking) {
   const ticketOptionId = await getTicketOptionId(type);
   const hotelOptionId = await getHotelOptionId(hotel);
 
@@ -14,23 +14,23 @@ export async function createReservation({ type, hotel, enrollmentId }: BodyInfoF
 
   const bookingInfo = { enrollmentId, ticketOptionId, hotelOptionId } as BookingInfo;
 
-  const reservation = await Booking.createNew(bookingInfo);
-  return reservation;
+  const booking = await Booking.createNew(bookingInfo);
+  return booking;
 }
 
 export async function findByEnrollmentId(enrollmentId: number) {
-  const reservation = await Booking.findByEnrollmentId(enrollmentId);
-  if(!reservation) return false;
-  return reservation;
+  const booking = await Booking.findByEnrollmentId(enrollmentId);
+  if(!booking) return false;
+  return booking;
 }
 
-export async function getAllReservations() {
-  const reservation = await Booking.findAll();
-  return reservation;
+export async function getAllBookings() {
+  const booking = await Booking.findAll();
+  return booking;
 }
 
 export async function updatePaymentStatus(bookingId: number) {
-  const reservation = await Booking.confirmPayment(bookingId);
+  const booking = await Booking.confirmPayment(bookingId);
 }
 
 async function getTicketOptionId( type: string) {

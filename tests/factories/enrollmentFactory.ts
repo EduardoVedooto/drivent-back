@@ -21,6 +21,6 @@ export async function createEnrollment(userId: number) {
   };
   const enrollment = await Enrollment.create(enrollmentData);
   await enrollment.save();
-  
+
   return enrollment;
 }

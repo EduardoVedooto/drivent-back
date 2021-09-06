@@ -4,3 +4,9 @@ node_modules
 !.env.example
 yarn.lock
 .vscode
+*users.seed.yml
+*enrollments.seed.yml
+*addresses.seed.yml
+ticketOptions.seed.yml
+hotelOptions.seed.yml
+*bookings.seed.yml

@@ -58,6 +58,8 @@ export default class Enrollment extends BaseEntity {
 
     enrollment.address.enrollmentId = enrollment.id;
     await enrollment.address.save();
+
+    return enrollment;
   }
 
   static async getByUserIdWithAddress(userId: number) {

@@ -32,7 +32,7 @@ async function runSeedFile(filename: string, connection: Connection) {
       `;
       
       await connection.query(query);
-      await connection.query(`SELECT setval('${table}_id_seq', (SELECT MAX(id) from "${table}"))`);
+      await connection.query(`SELECT setval('"${table}_id_seq"', (SELECT MAX(id) from "${table}"))`);
     }
   } catch (error) {
     /* eslint-disable-next-line no-console */

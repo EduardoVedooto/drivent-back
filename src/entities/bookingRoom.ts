@@ -1,4 +1,11 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToOne } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToOne,
+} from "typeorm";
 import Booking from "./Booking";
 import Room from "./Room";
 
@@ -7,7 +14,7 @@ export default class BookingsRooms extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Room, room => room.bookingRoom)
+  @ManyToOne(() => Room, (room) => room.bookingRoom)
   room: Room;
 
   @OneToOne(() => Booking)

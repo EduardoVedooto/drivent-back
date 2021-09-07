@@ -33,7 +33,7 @@ beforeEach(async () => {
   await clearDatabase();
   settings = await createBasicSettings();
   const hotels = await createBasicHotels() as Hotel[];
-  await createBasicRooms(hotels[0]);
+  await createBasicRooms(hotels);
   await createBasicHotelOptions();
   await createBasicTicketOptions();
 });
@@ -64,10 +64,22 @@ describe("GET /hotels", () => {
     expect(response.body).toContain(
       expect.arrayContaining([
         {
-          name: "hotel",
-          imgUrl: "https://imagehotel.com",
+          name: "Driven Resort",
+          imgUrl: "https://i.imgur.com/ZCBgNGO.png",
+          beds: 2,
+          accommodationType: ["Double"]
+        },
+        {
+          name: "Driven Palace",
+          imgUrl: "https://i.imgur.com/i2dp2Rb.png",
           beds: 1,
-          accommodationType: ["Single"],
+          accommodationType: ["Single"]
+        },
+        {
+          name: "Driven World",
+          imgUrl: "https://i.imgur.com/HuGh8VQ.pn",
+          beds: 3,
+          accommodationType: ["Triple"]
         },
       ])
     );

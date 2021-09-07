@@ -58,14 +58,23 @@ export async function createBasicHotels() {
   return [h1, h2, h3];
 }
 
-export async function createBasicRooms(hotel: Hotel) {
+export async function createBasicRooms(hotels: Hotel[]) {
   const r1 = Room.create({
     number: "101",
     bedCount: 2,
-    hotel: hotel,
+    hotel: hotels[0],
   });
-
-  await r1.save();
+  const r2 = Room.create({
+    number: "102",
+    bedCount: 1,
+    hotel: hotels[1],
+  });
+  const r3 = Room.create({
+    number: "103",
+    bedCount: 3,
+    hotel: hotels[2],
+  });
+  await Room.save([r1, r2, r3]);
 }
 
 export async function createBasicTicketOptions() {

@@ -67,10 +67,11 @@ describe("GET /hotels", () => {
     expect(response.body).toContain(
       expect.arrayContaining([
         expect.objectContaining({
+          id: hotel.id,
           name: "hotel",
           imgUrl: "https://imagehotel.com",
-          beds: 0,
-          accommodationType: []
+          beds: 1,
+          accommodationType: ["Single"]
         }),
       ])
     );

@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import ActivityBooking from "./ActivityBooking";
 import ActivityLocation from "./ActivityLocation";
 
 @Entity("activities")
@@ -26,4 +27,7 @@ export default class Activities extends BaseEntity {
 
   @Column()
   maxParticipants: number;
+
+  @OneToMany(() => ActivityBooking, activityBooking => activityBooking.activity)
+  activityBooking: ActivityBooking;
 }

@@ -32,7 +32,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await clearDatabase();
   settings = await createBasicSettings();
-  const hotels = await createBasicHotels() as Hotel[];
+  const hotels = (await createBasicHotels()) as Hotel[];
   await createBasicRooms(hotels);
   await createBasicHotelOptions();
   await createBasicTicketOptions();
@@ -61,27 +61,28 @@ describe("GET /hotels", () => {
     await createBookingWithHotel(enrollment.id);
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(200);
-    expect(response.body).toContain(
-      expect.arrayContaining([
-        {
-          name: "Driven Resort",
-          imgUrl: "https://i.imgur.com/ZCBgNGO.png",
-          beds: 2,
-          accommodationType: ["Double"]
-        },
-        {
-          name: "Driven Palace",
-          imgUrl: "https://i.imgur.com/i2dp2Rb.png",
-          beds: 1,
-          accommodationType: ["Single"]
-        },
-        {
-          name: "Driven World",
-          imgUrl: "https://i.imgur.com/HuGh8VQ.pn",
-          beds: 3,
-          accommodationType: ["Triple"]
-        },
-      ])
-    );
+    expect(response.body).toEqual([
+          {
+            id: response.body[0].id,
+            name: "Driven Resort",
+            imgUrl: "https://i.imgur.com/ZCBgNGO.png",
+            beds: 2,
+            accommodationsType: ["Double"],
+          },
+          {
+            id: response.body[1].id,
+            name: "Driven Palace",
+            imgUrl: "https://i.imgur.com/i2dp2Rb.png",
+            beds: 1,
+            accommodationsType: ["Single"],
+          },
+          {
+            id: response.body[2].id,
+            name: "Driven World",
+            imgUrl: "https://i.imgur.com/HuGh8VQ.png",
+            beds: 3,
+            accommodationsType: ["Triple"],
+          } 
+    ]);
   });
 });

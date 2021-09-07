@@ -1,3 +1,4 @@
+import RoomData from "@/interfaces/room";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import BookingRoom from "./bookingRoom";
 import Hotel from "./Hotel";
@@ -18,4 +19,10 @@ export default class Room extends BaseEntity {
 
   @OneToMany(() => BookingRoom, bookingRoom => bookingRoom.room, { eager: true })
   bookingRoom: BookingRoom[];
+
+  static async getRoomsForHotel(hotelId: number) {
+    const hotel = await Hotel.findOne({ where: { id: hotelId } });
+    return await this.find({ where: { hotel: hotel } });/* 
+    const add rooms.forEach((room) => room.hotelId = hotelId) as RoomData[]; */
+  }
 }

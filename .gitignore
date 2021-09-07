@@ -10,5 +10,4 @@ yarn.lock
 ticketOptions.seed.yml
 hotelOptions.seed.yml
 *bookings.seed.yml
-*rooms.seed.yml
 

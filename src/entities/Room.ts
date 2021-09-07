@@ -27,7 +27,7 @@ export default class Room extends BaseEntity {
     ];
     const hotel = await Hotel.findOne({ where: { id: hotelId } });
     if(!hotel) throw new CannotPickHotel(details);
-    const rooms = await this.find({ where: { hotel: hotel } }) as RoomData[];
+    const rooms = await this.find({ where: { hotel: hotel }, order: { id: "DESC" } }) as RoomData[];
     rooms.forEach((room) => {
       room.hotelId = hotelId;
       room.guests = room.bookingRoom;

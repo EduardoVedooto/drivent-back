@@ -7,6 +7,7 @@ export async function addGuest(req: Request, res: Response) {
   const roomId: number = req.body.roomId;
   const userId = req.user.id;
   const roomForGuest = await bookingRoomService.bookRoom(roomId, userId);
-  if(!roomForGuest) return res.sendStatus(httpStatus.CONFLICT);
-  res.sendStatus(httpStatus.CREATED);
+  if(roomForGuest === false) return res.sendStatus(httpStatus.NOT_FOUND);
+  else if(roomForGuest === null) return res.sendStatus(httpStatus.CONFLICT);
+  else res.sendStatus(httpStatus.CREATED);
 }

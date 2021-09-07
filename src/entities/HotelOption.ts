@@ -7,11 +7,27 @@ export default class HotelOption extends BaseEntity {
   id: number;
 
   @Column()
-  hasHotel: boolean;
+  name: string;
 
   @Column()
   price: number;
 
   @OneToMany(() => Booking, booking => booking.hotelOption)
   bookings: Booking[];
+
+  static async getHotelOptionId(hotel: boolean) {
+    let hotelOptionId;
+    const hotelOptionIdOnline = await HotelOption.findOne({ where: { name: "Sem hotel" } });
+    const hotelOptionIdPresencial = await HotelOption.findOne({ where: { name: "Drivent" } });
+   
+    if (hotel === false) {
+      hotelOptionId = hotelOptionIdOnline.id;
+    }
+  
+    if (hotel === true) {
+      hotelOptionId = hotelOptionIdPresencial.id;
+    }
+  
+    return hotelOptionId;
+  }
 }

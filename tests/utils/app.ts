@@ -66,20 +66,20 @@ export async function createBasicTicketOptions() {
     price: 25000,
   });
 
-  await TicketOption.save([to1, to2]);
+  return await TicketOption.save([to1, to2]);
 }
 
 export async function createBasicHotelOptions() {
   const ho1 = HotelOption.create({
-    hasHotel: false,
+    name: "Sem hotel",
     price: 0,
   });
   const ho2 = HotelOption.create({
-    hasHotel: true,
+    name: "Drivent",
     price: 35000,
   });
 
-  await HotelOption.save([ho1, ho2]);
+  return await HotelOption.save([ho1, ho2]);
 }
 
 export function createAuthHeader(token: string) {

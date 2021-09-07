@@ -1,25 +1,26 @@
-import User from "@/entities/User";
+import faker from "faker/locale/pt_BR";
+
 import Enrollment from "@/entities/Enrollment";
 
-export async function createEnrollment(user: User) {
-  const data = {
-    name: "mock",
-    cpf: "14190475742",
-    birthday: "1990/04/02",
-    phone: "+5521971275567",
-    userId: user.id,
+export async function createEnrollment(userId: number) {
+  const enrollmentData = {
+    name: faker.name.findName(),
+    cpf: "012.345.678-90",
+    birthday: "01-09-2021",
+    phone: faker.phone.phoneNumber(),
+    userId,
     address: {
-      cep: "20540220",
-      street: "Rua Gastao Penalva",
-      city: "Rio de Janeiro",
-      number: "38",
-      state: "RJ",
-      neighborhood: "Andarai",
-      addressDetail: "304",
-    },
+      cep: faker.address.zipCode(),
+      street: faker.address.streetName(),
+      city: faker.address.city(),
+      number: "123",
+      state: faker.address.state(),
+      neighborhood: faker.address.cityName(),
+      addressDetail: faker.lorem.word(),
+    }
   };
-
-  const enrollment = await Enrollment.createOrUpdate(data);
+  const enrollment = await Enrollment.create(enrollmentData);
+  await enrollment.save();
 
   return enrollment;
 }

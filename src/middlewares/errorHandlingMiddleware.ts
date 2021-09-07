@@ -7,6 +7,8 @@ import InvalidDataError from "@/errors/InvalidData";
 import ConflictError from "@/errors/ConflictError";
 import UnauthorizedError from "@/errors/Unauthorized";
 import NotFoundError from "@/errors/NotFoundError";
+import NotFoundBooking from "@/errors/NotFoundBooking";
+import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 
 /* eslint-disable-next-line */
@@ -53,6 +55,18 @@ export default function errorHandlingMiddleware(
     });
   }
 
+  if (err instanceof NotFoundBooking) {
+    return res.status(httpStatus.NOT_FOUND).send({
+      message: err.message
+    });
+  }
+
+  if (err instanceof AlreadyPaidBooking) {
+    return res.status(httpStatus.CONFLICT).send({
+      message: err.message
+    });
+  }
+  
   if (err instanceof CannotPickHotelError) {
     return res
       .status(httpStatus.FORBIDDEN)

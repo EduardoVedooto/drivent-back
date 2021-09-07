@@ -12,7 +12,6 @@ import {
 } from "../utils/app";
 import { createUser } from "../factories/userFactory";
 import {
-  createBooking,
   createBookingWithHotel,
 } from "../factories/bookingFactory";
 import { createEnrollment } from "../factories/enrollmentFactory";

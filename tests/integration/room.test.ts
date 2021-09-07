@@ -44,24 +44,29 @@ afterAll(async () => {
   await endConnection();
 });
 
+async function generateData() {
+  const user = await createUser();
+  const token = createToken(user.id);
+  await Session.createNew(user.id, token);
+  const enrollment = await createEnrollment(user.id);
+  await createBookingWithHotel(enrollment.id);
+  return token;
+}
+
 describe("GET /rooms/:hotelID", () => {
-    it("should return status 403 when hotel doesn't exits", async() => {
-        const user = await createUser();
-        const token = createToken(user.id);
-        await Session.createNew(user.id, token);
-        const enrollment = await createEnrollment(user.id);
-        await createBookingWithHotel(enrollment.id);
-        const response = await agent.get(`/rooms/${hotelId + 1}`).set(createAuthHeader(token));
-        expect(response.status).toEqual(403);
-    })
-    it("should return an array with one element when hotel exists", async() => {
-        const user = await createUser();
-        const token = createToken(user.id);
-        await Session.createNew(user.id, token);
-        const enrollment = await createEnrollment(user.id);
-        await createBookingWithHotel(enrollment.id);
-        const response = await agent.get(`/rooms/${hotelId}`).set(createAuthHeader(token));
-        expect(response.status).toEqual(200);
-        expect(response.body.length).toEqual(1);
-    })
-})
+  it("should return status 403 when hotel doesn't exits", async () => {
+    const token = await generateData();
+    const response = await agent
+      .get(`/rooms/${hotelId + 1}`)
+      .set(createAuthHeader(token));
+    expect(response.status).toEqual(403);
+  });
+  it("should return an array with one element when hotel exists", async () => {
+    const token = await generateData();
+    const response = await agent
+      .get(`/rooms/${hotelId}`)
+      .set(createAuthHeader(token));
+    expect(response.status).toEqual(200);
+    expect(response.body.length).toEqual(1);
+  });
+});

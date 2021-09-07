@@ -1,0 +1,10 @@
+seeds:
+  - ActivityLocation:
+      id: 1
+      name: "Auditório Principal"
+  - ActivityLocation:
+      id: 2
+      name: "Auditório Lateral"
+  - ActivityLocation:
+      id: 3
+      name: "Sala de Workshop"

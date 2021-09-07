@@ -18,8 +18,6 @@ import {
 import { createEnrollment } from "../factories/enrollmentFactory";
 import Session from "@/entities/Session";
 import { createToken } from "@/utils/app";
-import { createHotel } from "../factories/hotelFactory";
-import { createRoom } from "../factories/roomFactory";
 import Hotel from "@/entities/Hotel";
 
 const agent = supertest(app);

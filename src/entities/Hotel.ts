@@ -26,17 +26,24 @@ export default class Hotel extends BaseEntity {
   rooms: Room[];
 
   static async getHotelsForUser(userId: number) {
-    const details = [
+    const noPaymentDetails = [
       "Você precisa ter confirmado o pagamento antes de fazer a escolha de hospedagem",
     ];
+    const noHotelOptionDetails = [
+      "Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de ativideades"
+    ];
     const enrollment = await Enrollment.getByUserIdWithAddress(userId);
-    if(!enrollment) throw new CannotPickHotelError(details);
-    const booking = await Booking.getByEnrollmentId(enrollment.id);
-    if (!booking) throw new CannotPickHotelError(details);
+    if (!enrollment) throw new CannotPickHotelError(noPaymentDetails, "1");
+    const booking = await Booking.getByEnrollmentId(enrollment.id, {
+      relations: ["hotelOption"],
+    });
+    if (!booking) throw new CannotPickHotelError(noPaymentDetails, "1");
     if (!booking?.isPaid) {
-      throw new CannotPickHotelError(details);
+      throw new CannotPickHotelError(noPaymentDetails, "1");
     }
-    const hotels = await this.find({ order: { id: "ASC" } }) as HotelData[];
+    const hasUserPayedForHotel = booking.hotelOption.price !== 0;
+    if (!hasUserPayedForHotel) throw new CannotPickHotelError(noHotelOptionDetails, "2");
+    const hotels = (await this.find({ order: { id: "ASC" } })) as HotelData[];
     hotels.forEach((hotel) => {
       this.addAccommodationType(hotel);
       this.bedsAvailable(hotel);
@@ -47,15 +54,20 @@ export default class Hotel extends BaseEntity {
 
   static addAccommodationType(hotel: HotelData) {
     const accommodations = [];
-    if(hotel.rooms.find(room => room.bedCount === 1)) accommodations.push("Single");
-    if(hotel.rooms.find(room => room.bedCount === 2)) accommodations.push("Double");
-    if(hotel.rooms.find(room => room.bedCount === 3)) accommodations.push("Triple");
+    if (hotel.rooms.find((room) => room.bedCount === 1))
+      accommodations.push("Single");
+    if (hotel.rooms.find((room) => room.bedCount === 2))
+      accommodations.push("Double");
+    if (hotel.rooms.find((room) => room.bedCount === 3))
+      accommodations.push("Triple");
     hotel.accommodationsType = accommodations;
   }
 
   static bedsAvailable(hotel: HotelData) {
     let guests = 0;
-    const maxAvailable: number[] = hotel.rooms.map((room) =>  room.bedCount - room.bookingRoom.length);
+    const maxAvailable: number[] = hotel.rooms.map(
+      (room) => room.bedCount - room.bookingRoom.length
+    );
     guests = maxAvailable.reduce((acc, value) => acc + value, 0);
     hotel.beds = guests;
   }

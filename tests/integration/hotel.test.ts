@@ -51,6 +51,17 @@ describe("GET /hotels", () => {
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(403);
   });
+  it("should return status 403 when the booking does not include a hotel", async () => {
+    const user = await createUser();
+    const token = createToken(user.id);
+    await Session.createNew(user.id, token);
+    const enrollment = await createEnrollment(user.id);
+    const booking = await createBooking(enrollment.id);
+    booking.isPaid = true;
+    booking.save();
+    const response = await agent.get("/hotels").set(createAuthHeader(token));
+    expect(response.status).toEqual(403);
+  });
   it("should return hotels options", async () => {
     const user = await createUser();
     const token = createToken(user.id);
@@ -60,27 +71,27 @@ describe("GET /hotels", () => {
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([
-          {
-            id: response.body[0].id,
-            name: "Driven Resort",
-            imgUrl: "https://i.imgur.com/ZCBgNGO.png",
-            beds: 2,
-            accommodationsType: ["Double"],
-          },
-          {
-            id: response.body[1].id,
-            name: "Driven Palace",
-            imgUrl: "https://i.imgur.com/i2dp2Rb.png",
-            beds: 1,
-            accommodationsType: ["Single"],
-          },
-          {
-            id: response.body[2].id,
-            name: "Driven World",
-            imgUrl: "https://i.imgur.com/HuGh8VQ.png",
-            beds: 3,
-            accommodationsType: ["Triple"],
-          } 
+      {
+        id: response.body[0].id,
+        name: "Driven Resort",
+        imgUrl: "https://i.imgur.com/ZCBgNGO.png",
+        beds: 2,
+        accommodationsType: ["Double"],
+      },
+      {
+        id: response.body[1].id,
+        name: "Driven Palace",
+        imgUrl: "https://i.imgur.com/i2dp2Rb.png",
+        beds: 1,
+        accommodationsType: ["Single"],
+      },
+      {
+        id: response.body[2].id,
+        name: "Driven World",
+        imgUrl: "https://i.imgur.com/HuGh8VQ.png",
+        beds: 3,
+        accommodationsType: ["Triple"],
+      },
     ]);
   });
 });

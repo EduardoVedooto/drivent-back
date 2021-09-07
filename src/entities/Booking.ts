@@ -1,4 +1,12 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  OneToOne,
+} from "typeorm";
 import Enrollment from "./Enrollment";
 import TicketOption from "./TicketOption";
 import HotelOption from "./HotelOption";
@@ -28,35 +36,39 @@ export default class Booking extends BaseEntity {
   @JoinColumn()
   enrollment: Enrollment;
 
-  @ManyToOne(() => TicketOption, ticketOption => ticketOption.bookings)
+  @ManyToOne(() => TicketOption, (ticketOption) => ticketOption.bookings)
   ticketOption: TicketOption;
 
-  @ManyToOne(() => HotelOption, hotelOption => hotelOption.bookings)
+  @ManyToOne(() => HotelOption, (hotelOption) => hotelOption.bookings)
   hotelOption: HotelOption;
 
-  static async createNew( { enrollmentId, ticketOptionId, hotelOptionId }: BookingInfo ) {
+  static async createNew({
+    enrollmentId,
+    ticketOptionId,
+    hotelOptionId,
+  }: BookingInfo) {
     const bookingInfo = {
       isPaid: false,
       enrollmentId,
       ticketOptionId,
-      hotelOptionId
+      hotelOptionId,
     };
 
     const existingBooking = await Booking.findOne({
-      where: { enrollmentId }
+      where: { enrollmentId },
     });
-    if( existingBooking ) {
+    if (existingBooking) {
       throw new ConflictError("Participante já realizou uma reserva!");
     }
 
     const createBooking = Booking.create(bookingInfo);
     await createBooking.save();
 
-    const booking = await this.findByEnrollmentId( enrollmentId );
+    const booking = await this.findByEnrollmentId(enrollmentId);
     return booking;
   }
 
-  static async confirmPayment( bookingId: number ) {
+  static async confirmPayment(bookingId: number) {
     const booking = await Booking.findOne({
       where: { id: bookingId },
     });
@@ -81,10 +93,10 @@ export default class Booking extends BaseEntity {
       .execute();
   }
 
-  static async findByEnrollmentId( enrollmentId: number ) {
+  static async findByEnrollmentId(enrollmentId: number) {
     const booking = await Booking.findOne({
       relations: ["ticketOption", "hotelOption"],
-      where: { enrollmentId }
+      where: { enrollmentId },
     });
 
     delete booking?.hotelOptionId;
@@ -100,17 +112,20 @@ export default class Booking extends BaseEntity {
       relations: ["ticketOption", "hotelOption"],
     });
 
-    booking.forEach(b => {
+    booking.forEach((b) => {
       delete b?.hotelOptionId;
       delete b?.ticketOptionId;
       delete b?.ticketOption.id;
       delete b?.hotelOption.id;
     });
-    
+
     return booking;
   }
 
-  static async getByEnrollmentId(enrollmentId: number) {
-    return this.findOne({ where: { enrollmentId } });
+  static async getByEnrollmentId(
+    enrollmentId: number,
+    options: Record<string, unknown>
+  ) {
+    return this.findOne({ where: { enrollmentId }, ...options });
   }
 }

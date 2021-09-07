@@ -1,3 +1,4 @@
+import CannotPickHotel from "@/errors/CannotPickHotelError";
 import RoomData from "@/interfaces/room";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import BookingRoom from "./bookingRoom";
@@ -21,7 +22,11 @@ export default class Room extends BaseEntity {
   bookingRoom: BookingRoom[];
 
   static async getRoomsForHotel(hotelId: number) {
+    const details = [
+      "Você precisa de um hotel válido para a busca de quartos",
+    ];
     const hotel = await Hotel.findOne({ where: { id: hotelId } });
+    if(!hotel) throw new CannotPickHotel(details);
     const rooms = await this.find({ where: { hotel: hotel } }) as RoomData[];
     rooms.forEach((room) => {
       room.hotelId = hotelId;

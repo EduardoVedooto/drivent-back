@@ -23,7 +23,11 @@ export default class Room extends BaseEntity {
   static async getRoomsForHotel(hotelId: number) {
     const hotel = await Hotel.findOne({ where: { id: hotelId } });
     const rooms = await this.find({ where: { hotel: hotel } }) as RoomData[];
-    rooms.forEach((room) => room.hotelId = hotelId);
+    rooms.forEach((room) => {
+      room.hotelId = hotelId;
+      room.guests = room.bookingRoom;
+      delete room.bookingRoom;
+    });
     return rooms;
   }
 }

@@ -1,4 +1,5 @@
 import Hotel from "@/entities/Hotel";
+import Room from "@/entities/Room";
 import HotelOption from "@/entities/HotelOption";
 import Setting from "@/entities/Setting";
 import TicketOption from "@/entities/TicketOption";
@@ -54,6 +55,17 @@ export async function createBasicHotels() {
   });
 
   await Hotel.save([h1, h2, h3]);
+  return h1;
+}
+
+export async function createBasicRooms(id: number) {
+  const r1 = Room.create({
+    number: "101",
+    bedCount: 2,
+    hotelId: id
+  });
+
+  await r1.save();
 }
 
 export async function createBasicTicketOptions() {

@@ -9,7 +9,6 @@ import Enrollment from "./Enrollment";
 import Room from "./Room";
 import Booking from "./Booking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
-import NotFoundError from "@/errors/NotFoundError";
 import HotelData from "@/interfaces/hotel";
 
 @Entity("hotels")

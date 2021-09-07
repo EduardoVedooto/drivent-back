@@ -2,15 +2,25 @@ import supertest from "supertest";
 
 import app, { init } from "@/app";
 import { clearDatabase, endConnection } from "../utils/database";
-import { createAuthHeader, createBasicHotelOptions, createBasicHotels, createBasicRooms, createBasicSettings, createBasicTicketOptions } from "../utils/app";
+import {
+  createAuthHeader,
+  createBasicHotelOptions,
+  createBasicHotels,
+  createBasicRooms,
+  createBasicSettings,
+  createBasicTicketOptions,
+} from "../utils/app";
 import { createUser } from "../factories/userFactory";
-import { createBooking, createBookingWithHotel } from "../factories/bookingFactory";
+import {
+  createBooking,
+  createBookingWithHotel,
+} from "../factories/bookingFactory";
 import { createEnrollment } from "../factories/enrollmentFactory";
 import Session from "@/entities/Session";
-import HotelData from "@/entities/Hotel";
 import { createToken } from "@/utils/app";
 import { createHotel } from "../factories/hotelFactory";
 import { createRoom } from "../factories/roomFactory";
+import Hotel from "@/entities/Hotel";
 
 const agent = supertest(app);
 let settings = null;
@@ -22,8 +32,8 @@ beforeAll(async () => {
 beforeEach(async () => {
   await clearDatabase();
   settings = await createBasicSettings();
-  const hotel = await createBasicHotels();
-  await createBasicRooms(hotel.id);
+  const hotels = await createBasicHotels() as Hotel[];
+  await createBasicRooms(hotels[0]);
   await createBasicHotelOptions();
   await createBasicTicketOptions();
 });
@@ -52,15 +62,14 @@ describe("GET /hotels", () => {
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(200);
     expect(response.body).toContain(
-      expect.arrayContaining([{
+      expect.arrayContaining([
+        {
           name: "hotel",
           imgUrl: "https://imagehotel.com",
           beds: 1,
-          accommodationType: ["Single"]
+          accommodationType: ["Single"],
         },
-
       ])
     );
-  })
-
+  });
 });

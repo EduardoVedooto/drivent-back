@@ -55,14 +55,14 @@ export async function createBasicHotels() {
   });
 
   await Hotel.save([h1, h2, h3]);
-  return h1;
+  return [h1, h2, h3];
 }
 
-export async function createBasicRooms(id: number) {
+export async function createBasicRooms(hotel: Hotel) {
   const r1 = Room.create({
     number: "101",
     bedCount: 2,
-    hotelId: id
+    hotel: hotel,
   });
 
   await r1.save();

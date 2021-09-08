@@ -2,6 +2,7 @@ import Hotel from "@/entities/Hotel";
 import HotelOption from "@/entities/HotelOption";
 import Setting from "@/entities/Setting";
 import TicketOption from "@/entities/TicketOption";
+import Dates from "@/entities/Dates";
 
 export async function createBasicSettings() {
   const startDate = Setting.create({
@@ -80,6 +81,13 @@ export async function createBasicHotelOptions() {
   });
 
   return await HotelOption.save([ho1, ho2]);
+}
+
+export async function createDates() {
+  const date1 = Dates.create({ day: "2021-10-22" });
+  const date2 = Dates.create({ day: "2021-10-23" });
+
+  return await Dates.save([date1, date2]);
 }
 
 export function createAuthHeader(token: string) {

@@ -1,0 +1,10 @@
+seeds:
+  - Dates:
+      id: 1
+      day: "2021-10-22"
+  - Dates:
+      id: 2
+      day: "2021-10-23"
+  - Dates:
+      id: 3
+      day: "2021-10-24"

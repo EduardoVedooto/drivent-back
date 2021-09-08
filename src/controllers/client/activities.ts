@@ -4,6 +4,6 @@ import httpStatus from "http-status";
 import * as service from "@/services/client/activities";
 
 export async function getAllDays(req: Request, res: Response) {
-  service.getAllDays();
-  res.status(httpStatus.NOT_IMPLEMENTED);
+  const result = await service.getAllDays();
+  res.status(httpStatus.OK).send(result);
 }

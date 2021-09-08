@@ -75,6 +75,7 @@ export async function createBasicRooms(hotels: Hotel[]) {
     hotel: hotels[2],
   });
   await Room.save([r1, r2, r3]);
+  return [r1, r2, r3];
 }
 
 export async function createBasicTicketOptions() {

@@ -36,7 +36,7 @@ export default class Hotel extends BaseEntity {
     if (!booking?.isPaid) {
       throw new CannotPickHotelError(details);
     }
-    const hotels = await this.find() as HotelData[];
+    const hotels = await this.find({ order: { id: "ASC" } }) as HotelData[];
     hotels.forEach((hotel) => {
       this.addAccommodationType(hotel);
       this.bedsAvailable(hotel);

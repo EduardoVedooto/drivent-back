@@ -15,6 +15,11 @@ export default class HotelOption extends BaseEntity {
   @OneToMany(() => Booking, booking => booking.hotelOption)
   bookings: Booking[];
 
+  static async findAll() {
+    const ticketOptions = await HotelOption.find();
+    return ticketOptions;
+  }
+
   static async getHotelOptionId(hotel: boolean) {
     let hotelOptionId;
     const hotelOptionIdOnline = await HotelOption.findOne({ where: { name: "Sem hotel" } });

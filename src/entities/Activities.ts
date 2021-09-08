@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import ActivityBooking from "./ActivityBooking";
 import ActivityLocation from "./ActivityLocation";
+import Dates from "./Dates";
 
 @Entity("activities")
 export default class Activities extends BaseEntity {
@@ -10,8 +11,8 @@ export default class Activities extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ type: "timestamptz" })
-  date: Date;
+  @Column()
+  dateId: number;
 
   @Column()
   startsAt: string;
@@ -22,11 +23,14 @@ export default class Activities extends BaseEntity {
   @Column()
   activityLocationId: number;
   
-  @ManyToOne(() => ActivityLocation, activityLocation => activityLocation.activities)
-  activityLocation: ActivityLocation;
-
   @Column()
   maxParticipants: number;
+  
+  @ManyToOne(() => Dates, dates => dates.activities)
+  date: Dates;
+
+  @ManyToOne(() => ActivityLocation, activityLocation => activityLocation.activities)
+  activityLocation: ActivityLocation;
 
   @OneToMany(() => ActivityBooking, activityBooking => activityBooking.activity)
   activityBooking: ActivityBooking;

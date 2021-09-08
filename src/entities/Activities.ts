@@ -33,5 +33,5 @@ export default class Activities extends BaseEntity {
   activityLocation: ActivityLocation;
 
   @OneToMany(() => ActivityBooking, activityBooking => activityBooking.activity)
-  activityBooking: ActivityBooking;
+  activityBookings: ActivityBooking[];
 }

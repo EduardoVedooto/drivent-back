@@ -13,9 +13,9 @@ export default class ActivityBooking extends BaseEntity {
   @Column()
   bookingId: number;
 
-  @ManyToOne(() => Activities, activity => activity.activityBooking)
+  @ManyToOne(() => Activities, activity => activity.activityBookings)
   activity: Activities;
 
-  @ManyToOne(() => Booking, booking => booking.activityBooking)
+  @ManyToOne(() => Booking, booking => booking.activityBookings)
   booking: Booking;
 }

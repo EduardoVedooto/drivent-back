@@ -30,5 +30,5 @@ export async function getAllBookings() {
 }
 
 export async function updatePaymentStatus(bookingId: number) {
-  const booking = await Booking.confirmPayment(bookingId);
+  await Booking.confirmPayment(bookingId);
 }

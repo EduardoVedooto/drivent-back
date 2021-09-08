@@ -15,7 +15,12 @@ export default class TicketOption extends BaseEntity {
   @OneToMany(() => Booking, booking => booking.ticketOption)
   bookings: Booking[];
 
-  static async getTicketOptionId( type: string) {
+  static async findAll() {
+    const ticketOptions = await TicketOption.find();
+    return ticketOptions;
+  }
+
+  static async getTicketOptionId(type: string) {
     let ticketOptionId;
     const ticketOptionIdOnline = await TicketOption.findOne({ where: { type: "Online" } });
     const ticketOptionIdPresencial = await TicketOption.findOne({ where: { type: "Presencial" } });

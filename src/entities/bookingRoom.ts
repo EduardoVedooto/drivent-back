@@ -25,11 +25,15 @@ export default class BookingsRooms extends BaseEntity {
   static async getRoomForUser(roomId: number, userId: number) {
     const room = await Room.findOne({ where: { id: roomId } });
     const enrollment = await Enrollment.findOne({ where: { userId } });
-    const booking = await Booking.findOne({ where: { enrollmentId: enrollment.id } });
-    if(!booking || !room || !enrollment) return false;
+    const booking = await Booking.findOne({
+      where: { enrollmentId: enrollment.id },
+    });
+    if (!booking || !room || !enrollment) return false;
     const existingBookingRoom = await this.findOne({ where: { booking } });
-    if(existingBookingRoom) return null;
-    else{
+    if (existingBookingRoom) {
+      existingBookingRoom.room = room;
+      await existingBookingRoom.save();
+    } else {
       const newBooking = this.create({ room, booking });
       await newBooking.save();
       return true;

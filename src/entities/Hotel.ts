@@ -47,9 +47,12 @@ export default class Hotel extends BaseEntity {
 
   static addAccommodationType(hotel: HotelData) {
     const accommodations = [];
-    if(hotel.rooms.find(room => room.bedCount === 1)) accommodations.push("Single");
-    if(hotel.rooms.find(room => room.bedCount === 2)) accommodations.push("Double");
-    if(hotel.rooms.find(room => room.bedCount === 3)) accommodations.push("Triple");
+    const hasSingleRoom = !!hotel.rooms.find(room => room.bedCount === 1);
+    const hasDoubleRoom = !!hotel.rooms.find(room => room.bedCount === 2);
+    const hasTripleRoom = !!hotel.rooms.find(room => room.bedCount === 3);
+    if(hasSingleRoom) accommodations.push("Single");
+    if(hasDoubleRoom) accommodations.push("Double");
+    if(hasTripleRoom) accommodations.push("Triple");
     hotel.accommodationsType = accommodations;
   }
 

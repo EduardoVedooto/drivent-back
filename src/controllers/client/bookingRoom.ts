@@ -11,3 +11,10 @@ export async function addGuest(req: Request, res: Response) {
   else if(roomForGuest === null) return res.sendStatus(httpStatus.CONFLICT);
   else res.sendStatus(httpStatus.CREATED);
 }
+
+export async function findGuest(req: Request, res: Response) {
+  const userId = req.user.id;
+  const findRoomByUserId = await bookingRoomService.findRoom(userId);
+  if(findRoomByUserId) return res.send(findRoomByUserId).status(httpStatus.OK);
+  else return res.sendStatus(httpStatus.NOT_FOUND);
+}

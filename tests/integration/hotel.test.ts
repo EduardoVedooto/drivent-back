@@ -19,6 +19,7 @@ import { createEnrollment } from "../factories/enrollmentFactory";
 import Session from "@/entities/Session";
 import { createToken } from "@/utils/app";
 import Hotel from "@/entities/Hotel";
+import HotelData from "@/interfaces/hotel";
 
 const agent = supertest(app);
 let settings = null;
@@ -59,28 +60,38 @@ describe("GET /hotels", () => {
     await createBookingWithHotel(enrollment.id);
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([
-          {
-            id: response.body[0].id,
-            name: "Driven Resort",
-            imgUrl: "https://i.imgur.com/ZCBgNGO.png",
-            beds: 2,
-            accommodationsType: ["Double"],
-          },
-          {
-            id: response.body[1].id,
-            name: "Driven Palace",
-            imgUrl: "https://i.imgur.com/i2dp2Rb.png",
-            beds: 1,
-            accommodationsType: ["Single"],
-          },
-          {
-            id: response.body[2].id,
-            name: "Driven World",
-            imgUrl: "https://i.imgur.com/HuGh8VQ.png",
-            beds: 3,
-            accommodationsType: ["Triple"],
-          } 
+    const DrivenResort = response.body.find(
+      (hotel: HotelData) => hotel.name === "Driven Resort"
+    );
+    const DrivenWorld = response.body.find(
+      (hotel: HotelData) => hotel.name === "Driven World"
+    );
+    const DrivenPalace = response.body.find(
+      (hotel: HotelData) => hotel.name === "Driven Palace"
+    );
+    const hotels = [DrivenResort, DrivenWorld, DrivenPalace];
+    expect(hotels).toEqual([
+      {
+        id: hotels[0].id,
+        name: "Driven Resort",
+        imgUrl: "https://i.imgur.com/ZCBgNGO.png",
+        beds: 2,
+        accommodationsType: ["Double"],
+      },
+      {
+        id: hotels[1].id,
+        name: "Driven World",
+        imgUrl: "https://i.imgur.com/HuGh8VQ.png",
+        beds: 3,
+        accommodationsType: ["Triple"],
+      },
+      {
+        id: hotels[2].id,
+        name: "Driven Palace",
+        imgUrl: "https://i.imgur.com/i2dp2Rb.png",
+        beds: 1,
+        accommodationsType: ["Single"],
+      },
     ]);
   });
 });

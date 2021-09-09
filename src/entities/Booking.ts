@@ -51,10 +51,6 @@ export default class Booking extends BaseEntity {
       where: { enrollmentId },
     });
 
-    if (existingBooking) {
-      throw new ConflictError("Participante já realizou uma reserva!");
-    }
-
     if( existingBooking && existingBooking.isPaid === false) {
       await Booking.createQueryBuilder()
         .update(this)

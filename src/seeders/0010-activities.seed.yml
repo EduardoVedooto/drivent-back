@@ -17,6 +17,14 @@ seeds:
       maxParticipants: 10
   - Activities:
       id: 3
+      name: "Como ficar rico com esse 1 truque"
+      dateId: 1
+      activityLocationId: 2
+      startsAt: "9:00"
+      endsAt: "11:00"
+      maxParticipants: 0
+  - Activities:
+      id: 4
       name: "Discussão: Futuro do Universo Marvel"
       dateId: 2
       activityLocationId: 2
@@ -24,7 +32,7 @@ seeds:
       endsAt: "10:00"
       maxParticipants: 10
   - Activities:
-      id: 4
+      id: 5
       name: "Programação de Jogos"
       dateId: 3
       activityLocationId: 3

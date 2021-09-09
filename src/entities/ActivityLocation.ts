@@ -1,3 +1,4 @@
+import LocationWithActivitiesData from "@/interfaces/activityLocation";
 import {
   BaseEntity,
   Column,
@@ -23,13 +24,17 @@ export default class ActivityLocation extends BaseEntity {
       "activityLocation"
     )
       .leftJoinAndSelect("activityLocation.activities", "activities")
+      .leftJoinAndSelect("activities.activityBookings", "bookings")
       .where("activities.dateId = :dateId", { dateId })
       .orderBy({ "activities.startsAt": "ASC", "activityLocation.name": "ASC" })
-      .getMany();
+      .getMany() as LocationWithActivitiesData[];
+    
     locationsWithActivities.forEach((location) => {
       location.activities.forEach((activity) => {
         delete activity.dateId;
         delete activity.activityLocationId;
+        activity.participantCount = activity.activityBookings.length;
+        delete activity.activityBookings;
       });
     });
     return locationsWithActivities;

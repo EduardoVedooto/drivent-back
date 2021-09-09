@@ -10,6 +10,7 @@ import Room from "./Room";
 import Booking from "./Booking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 import HotelData from "@/interfaces/hotel";
+import BookingsRooms from "./bookingRoom";
 
 @Entity("hotels")
 export default class Hotel extends BaseEntity {
@@ -30,35 +31,41 @@ export default class Hotel extends BaseEntity {
       "Você precisa ter confirmado o pagamento antes de fazer a escolha de hospedagem",
     ];
     const enrollment = await Enrollment.getByUserIdWithAddress(userId);
-    if(!enrollment) throw new CannotPickHotelError(details);
+    if (!enrollment) throw new CannotPickHotelError(details);
     const booking = await Booking.getByEnrollmentId(enrollment.id);
     if (!booking) throw new CannotPickHotelError(details);
     if (!booking?.isPaid) {
       throw new CannotPickHotelError(details);
     }
-    const hotels = await this.find({ order: { id: "ASC" } }) as HotelData[];
-    hotels.forEach((hotel) => {
-      this.addAccommodationType(hotel);
-      this.bedsAvailable(hotel);
-      delete hotel.rooms;
-    });
-    return hotels;
+    const bookingRoom = await BookingsRooms.findGuest(userId);
+    if (bookingRoom) return [bookingRoom];
+    else {
+      const hotels = (await this.find({ order: { id: "ASC" } })) as HotelData[];
+      hotels.forEach((hotel) => {
+        this.addAccommodationType(hotel);
+        this.bedsAvailable(hotel);
+        delete hotel.rooms;
+      });
+      return hotels;
+    }
   }
 
   static addAccommodationType(hotel: HotelData) {
     const accommodations = [];
-    const hasSingleRoom = !!hotel.rooms.find(room => room.bedCount === 1);
-    const hasDoubleRoom = !!hotel.rooms.find(room => room.bedCount === 2);
-    const hasTripleRoom = !!hotel.rooms.find(room => room.bedCount === 3);
-    if(hasSingleRoom) accommodations.push("Single");
-    if(hasDoubleRoom) accommodations.push("Double");
-    if(hasTripleRoom) accommodations.push("Triple");
+    const hasSingleRoom = !!hotel.rooms.find((room) => room.bedCount === 1);
+    const hasDoubleRoom = !!hotel.rooms.find((room) => room.bedCount === 2);
+    const hasTripleRoom = !!hotel.rooms.find((room) => room.bedCount === 3);
+    if (hasSingleRoom) accommodations.push("Single");
+    if (hasDoubleRoom) accommodations.push("Double");
+    if (hasTripleRoom) accommodations.push("Triple");
     hotel.accommodationsType = accommodations;
   }
 
   static bedsAvailable(hotel: HotelData) {
     let guests = 0;
-    const maxAvailable: number[] = hotel.rooms.map((room) =>  room.bedCount - room.bookingRoom.length);
+    const maxAvailable: number[] = hotel.rooms.map(
+      (room) => room.bedCount - room.bookingRoom.length
+    );
     guests = maxAvailable.reduce((acc, value) => acc + value, 0);
     hotel.beds = guests;
   }

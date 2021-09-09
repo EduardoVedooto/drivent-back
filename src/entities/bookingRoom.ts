@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import Booking from "./Booking";
 import Enrollment from "./Enrollment";
+import Hotel from "./Hotel";
 import Room from "./Room";
 
 @Entity("bookingRoom")
@@ -32,7 +33,23 @@ export default class BookingsRooms extends BaseEntity {
     else{
       const newBooking = this.create({ room, booking });
       await newBooking.save();
-      return true;
+      const bookedRoom = await this.findGuest(userId);
+      return bookedRoom;
     }
+  }
+
+  static async findGuest(userId: number) {
+    const enrollment = await Enrollment.findOne({ where: { userId } });
+    const booking = await Booking.findOne({ where: { enrollmentId: enrollment.id } });
+    const bookingRoom = await this.findOne({ relations: ["room"], where: { booking } });
+    if(!booking || !enrollment || !bookingRoom) return false;
+    const roomWithHotel = await Room.findOne({ relations: ["hotel"], where: { id: bookingRoom.room.id } });
+    this.findRoom(roomWithHotel.id, roomWithHotel.hotel);
+    return roomWithHotel.hotel;
+  }
+
+  static findRoom(roomId: number, hotel: Hotel) {
+    const room = hotel.rooms.find(room => room.id === roomId);
+    hotel.rooms = [room];
   }
 }

@@ -9,6 +9,6 @@ export async function createBookingRoom(enrollmentId: number, roomId: number) {
     booking,
     room,
   };
-  const bookingRoom = await BookingsRooms.create(bookingRoomData);
-  bookingRoom.save();
+  const bookingRoom = BookingsRooms.create(bookingRoomData);
+  await bookingRoom.save();
 }

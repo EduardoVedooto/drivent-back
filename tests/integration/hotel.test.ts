@@ -67,7 +67,7 @@ describe("GET /hotels", () => {
     const token = createToken(user.id);
     await Session.createNew(user.id, token);
     const enrollment = await createEnrollment(user.id);
-    const booking = await createBooking(enrollment.id);
+    const booking = await createBooking(enrollment.id, true);
     booking.isPaid = true;
     booking.save();
     const response = await agent.get("/hotels").set(createAuthHeader(token));

@@ -2,7 +2,6 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColu
 import Enrollment from "./Enrollment";
 import TicketOption from "./TicketOption";
 import HotelOption from "./HotelOption";
-import ConflictError from "@/errors/ConflictError";
 import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import BookingInfo from "@/interfaces/bookingInfo";
@@ -34,7 +33,7 @@ export default class Booking extends BaseEntity {
   @ManyToOne(() => HotelOption, hotelOption => hotelOption.bookings)
   hotelOption: HotelOption;
 
-  static async createNew( { enrollmentId, ticketOptionId, hotelOptionId }: BookingInfo ) {
+  static async createOrUpdate( { enrollmentId, ticketOptionId, hotelOptionId }: BookingInfo ) {
     const bookingInfo = {
       isPaid: false,
       enrollmentId,
@@ -45,12 +44,17 @@ export default class Booking extends BaseEntity {
     const existingBooking = await Booking.findOne({
       where: { enrollmentId }
     });
-    if( existingBooking ) {
-      throw new ConflictError("Participante já realizou uma reserva!");
-    }
 
-    const createBooking = Booking.create(bookingInfo);
-    await createBooking.save();
+    if( existingBooking ) {
+      await Booking.createQueryBuilder()
+        .update(this)
+        .set({ isPaid: false, ticketOptionId, hotelOptionId })
+        .where({ enrollmentId })
+        .execute();
+    } else {
+      const createBooking = Booking.create(bookingInfo);
+      await createBooking.save();
+    }
 
     const booking = await this.findByEnrollmentId( enrollmentId );
     return booking;

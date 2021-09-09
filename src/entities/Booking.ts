@@ -5,6 +5,7 @@ import HotelOption from "./HotelOption";
 import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import BookingInfo from "@/interfaces/bookingInfo";
+import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
 
 @Entity("bookings")
 export default class Booking extends BaseEntity {
@@ -45,12 +46,14 @@ export default class Booking extends BaseEntity {
       where: { enrollmentId }
     });
 
-    if( existingBooking ) {
+    if( existingBooking && existingBooking.isPaid === false) {
       await Booking.createQueryBuilder()
         .update(this)
         .set({ isPaid: false, ticketOptionId, hotelOptionId })
         .where({ enrollmentId })
         .execute();
+    } else if( existingBooking && existingBooking.isPaid === true) {
+      throw new NotAllowedUpdateBooking();
     } else {
       const createBooking = Booking.create(bookingInfo);
       await createBooking.save();

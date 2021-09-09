@@ -84,13 +84,26 @@ describe("POST /booking", () => {
     expect(response.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
 
+  it("should return NOT ACCEPTABLE (406) for invalid enrollmentId", async () => {
+    const { session, enrollment, body } = await generateData();
+
+    await createBooking(enrollment.id, true);
+
+    const response = await agent
+      .post("/booking")
+      .send(body)
+      .set("Authorization", `Bearer ${session.token}`);
+
+    expect(response.statusCode).toEqual(httpStatus.NOT_ACCEPTABLE);
+  });
+
 });
 
 describe("GET /booking", () => {
   it("should return an array containing all booking", async () => {
     const { session, enrollment } = await generateData();
 
-    await createBooking(enrollment.id);
+    await createBooking(enrollment.id, false);
 
     const response = await agent
       .get("/booking")
@@ -132,7 +145,7 @@ describe("GET /booking/:enrollmentId/find", () => {
   it("should return an object with booking info for an specific enrollmentId", async () => {
     const { session, enrollment } = await generateData();
 
-    await createBooking(enrollment.id);
+    await createBooking(enrollment.id, false);
 
     const response = await agent
       .get(`/booking/${enrollment.id}/find`)
@@ -181,7 +194,7 @@ describe("POST /booking/:bookingId/payment", () => {
   it("should return status OK (201) when receives payment", async () => {
     const { session, enrollment } = await generateData();
 
-    const booking = await createBooking(enrollment.id);
+    const booking = await createBooking(enrollment.id, false);
 
     const response = await agent
       .post(`/booking/${booking.id}/payment`)
@@ -194,7 +207,7 @@ describe("POST /booking/:bookingId/payment", () => {
   it("should return status CONFLICT (409) when payment is already done", async () => {
     const { session, enrollment } = await generateData();
 
-    const booking = await createBooking(enrollment.id);
+    const booking = await createBooking(enrollment.id, false);
 
     await agent
       .post(`/booking/${booking.id}/payment`)

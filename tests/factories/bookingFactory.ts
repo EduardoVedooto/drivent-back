@@ -1,7 +1,7 @@
 import Booking from "@/entities/Booking";
 import {createBasicHotelOptions, createBasicTicketOptions} from "../utils/app";
 
-export async function createBooking(enrollmentId: number) {
+export async function createBooking(enrollmentId: number, isPaid: boolean) {
 
     const hotelOption = await createBasicHotelOptions();
     const hotelOptionId = hotelOption[0].id;
@@ -10,7 +10,7 @@ export async function createBooking(enrollmentId: number) {
     const ticketOptionId = ticketOption[0].id;
   
     const bookingData = {
-    isPaid: false,
+      isPaid,
       enrollmentId,
       ticketOptionId,
       hotelOptionId
@@ -21,4 +21,6 @@ export async function createBooking(enrollmentId: number) {
   
   return booking;
 }
+
+
 

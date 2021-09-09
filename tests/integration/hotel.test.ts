@@ -20,6 +20,7 @@ import Session from "@/entities/Session";
 import { createToken } from "@/utils/app";
 import Hotel from "@/entities/Hotel";
 import HotelData from "@/interfaces/hotel";
+import { createBookingRoom } from "../factories/bookingRoomFactory";
 
 const agent = supertest(app);
 let settings = null;
@@ -35,7 +36,7 @@ beforeEach(async () => {
   settings = await createBasicSettings();
   const hotels = (await createBasicHotels()) as Hotel[];
   const rooms = await createBasicRooms(hotels);
-  roomId = rooms[2].id
+  roomId = rooms[2].id;
   await createBasicHotelOptions();
   await createBasicTicketOptions();
 });
@@ -45,24 +46,24 @@ afterAll(async () => {
   await endConnection();
 });
 
-async function createUserToken(hotel: boolean){
+async function createUserToken(hotel: boolean) {
   const user = await createUser();
   const token = await createToken(user.id);
   await Session.createNew(user.id, token);
   const enrollment = await createEnrollment(user.id);
-  if(hotel) await createBookingWithHotel(enrollment.id);
+  if (hotel) await createBookingWithHotel(enrollment.id);
   else await createBooking(enrollment.id);
-  return token;
+  return { token, enrollmentId: enrollment.id };
 }
 
 describe("GET /hotels", () => {
   it("should return status 403 when no payment has been made", async () => {
-    const token = await createUserToken(false);
+    const { token } = await createUserToken(false);
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(403);
   });
   it("should return hotels options", async () => {
-    const token = await createUserToken(true);
+    const { token } = await createUserToken(true);
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(200);
     const DrivenResort = response.body.find(
@@ -100,11 +101,10 @@ describe("GET /hotels", () => {
     ]);
   });
   it("should return only one hotel if user have a booking room", async () => {
-    const token = await createUserToken(true);
-    const body = { roomId };
-    await agent.post(`/booking-room`).set(createAuthHeader(token)).send(body);
+    const { token, enrollmentId } = await createUserToken(true);
+    await createBookingRoom(enrollmentId, roomId);
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(1);
-  })
+  });
 });

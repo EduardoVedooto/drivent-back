@@ -22,8 +22,8 @@ export default class HotelOption extends BaseEntity {
 
   static async getHotelOptionId(hotel: boolean) {
     let hotelOptionId;
-    const hotelOptionIdOnline = await HotelOption.findOne({ where: { name: "Sem hotel" } });
-    const hotelOptionIdPresencial = await HotelOption.findOne({ where: { name: "Com hotel" } });
+    const hotelOptionIdOnline = await HotelOption.findOne({ where: { name: "Sem Hotel" } });
+    const hotelOptionIdPresencial = await HotelOption.findOne({ where: { name: "Com Hotel" } });
    
     if (hotel === false) {
       hotelOptionId = hotelOptionIdOnline.id;

@@ -41,7 +41,7 @@ export default class BookingsRooms extends BaseEntity {
     const enrollment = await Enrollment.findOne({ where: { userId } });
     const booking = await Booking.findOne({ where: { enrollmentId: enrollment.id } });
     const bookingRoom = await this.findOne({ relations: ["room"], where: { booking } });
-    if(!booking || !enrollment) return false;
+    if(!booking || !enrollment || !bookingRoom) return false;
     const roomWithHotel = await Room.findOne({ relations: ["hotel"], where: { id: bookingRoom.room.id } });
     this.findRoom(roomWithHotel.id, roomWithHotel.hotel);
     return roomWithHotel.hotel;

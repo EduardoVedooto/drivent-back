@@ -10,6 +10,7 @@ import NotFoundError from "@/errors/NotFoundError";
 import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
+import InvalidDate from "@/errors/InvalidDate";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware(
@@ -71,6 +72,12 @@ export default function errorHandlingMiddleware(
     return res
       .status(httpStatus.FORBIDDEN)
       .send({ message: err.message, details: err.details });
+  }
+
+  if (err instanceof InvalidDate) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .send({ message: err.message });
   }
 
   /* eslint-disable-next-line no-console */

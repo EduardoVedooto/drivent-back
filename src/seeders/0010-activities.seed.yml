@@ -1,0 +1,33 @@
+seeds:
+  - Activities:
+      id: 1
+      name: "Minecraft, do quarto ao estrelato"
+      dateId: 1
+      activityLocationId: 1
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 10
+  - Activities:
+      id: 2
+      name: "LeagueOfLegends vs Netflix"
+      dateId: 1
+      activityLocationId: 1
+      startsAt: "10:00"
+      endsAt: "11:00"
+      maxParticipants: 10
+  - Activities:
+      id: 3
+      name: "Discussão: Futuro do Universo Marvel"
+      dateId: 2
+      activityLocationId: 2
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 10
+  - Activities:
+      id: 4
+      name: "Programação de Jogos"
+      dateId: 3
+      activityLocationId: 3
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 10

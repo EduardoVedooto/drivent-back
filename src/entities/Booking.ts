@@ -1,12 +1,4 @@
-import {
-  BaseEntity,
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  OneToOne,
-} from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany } from "typeorm";
 import Enrollment from "./Enrollment";
 import TicketOption from "./TicketOption";
 import HotelOption from "./HotelOption";
@@ -14,6 +6,7 @@ import ConflictError from "@/errors/ConflictError";
 import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import BookingInfo from "@/interfaces/bookingInfo";
+import ActivityBooking from "./ActivityBooking";
 
 @Entity("bookings")
 export default class Booking extends BaseEntity {
@@ -42,11 +35,10 @@ export default class Booking extends BaseEntity {
   @ManyToOne(() => HotelOption, (hotelOption) => hotelOption.bookings)
   hotelOption: HotelOption;
 
-  static async createNew({
-    enrollmentId,
-    ticketOptionId,
-    hotelOptionId,
-  }: BookingInfo) {
+  @OneToMany(() => ActivityBooking, activityBooking => activityBooking.booking)
+  activityBookings: ActivityBooking[];
+
+  static async createNew( { enrollmentId, ticketOptionId, hotelOptionId }: BookingInfo ) {
     const bookingInfo = {
       isPaid: false,
       enrollmentId,

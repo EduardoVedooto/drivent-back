@@ -1,4 +1,4 @@
-import BookingRoom from "@/entities/BookingRoom";
+import BookingRoom from "@/entities/bookingRoom";
 import Booking from "@/entities/Booking";
 import Room from "@/entities/Room";
 

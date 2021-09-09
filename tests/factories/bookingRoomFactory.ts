@@ -1,4 +1,4 @@
-import BookingRoom from "@/entities/bookingRoom";
+import BookingsRooms from "@/entities/bookingRoom";
 import Booking from "@/entities/Booking";
 import Room from "@/entities/Room";
 
@@ -9,6 +9,6 @@ export async function createBookingRoom(enrollmentId: number, roomId: number) {
     booking,
     room,
   };
-  const bookingRoom = await BookingRoom.create(bookingRoomData);
+  const bookingRoom = await BookingsRooms.create(bookingRoomData);
   bookingRoom.save();
 }

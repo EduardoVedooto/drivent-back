@@ -11,4 +11,8 @@ export default class Dates extends BaseEntity {
 
   @OneToMany(() => Activities, activities => activities.date)
   activities: Activities[];
+
+  static async getAllDates() {
+    return this.find();
+  }
 }

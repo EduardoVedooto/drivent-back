@@ -33,7 +33,8 @@ export default class BookingsRooms extends BaseEntity {
     else{
       const newBooking = this.create({ room, booking });
       await newBooking.save();
-      return true;
+      const bookedRoom = await this.findGuest(userId);
+      return bookedRoom;
     }
   }
 

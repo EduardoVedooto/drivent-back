@@ -42,8 +42,13 @@ export default class BookingsRooms extends BaseEntity {
     const booking = await Booking.findOne({ where: { enrollmentId: enrollment.id } });
     const bookingRoom = await this.findOne({ relations: ["room"], where: { booking } });
     if(!booking || !enrollment) return false;
-    const room = await Room.findOne({ relations: ["hotel"], where: { id: bookingRoom.room.id } });
-    delete room.hotel.rooms;
-    return [{ room: room }];
+    const roomWithHotel = await Room.findOne({ relations: ["hotel"], where: { id: bookingRoom.room.id } });
+    this.findRoom(roomWithHotel.id, roomWithHotel.hotel);
+    return roomWithHotel.hotel;
+  }
+
+  static findRoom(roomId: number, hotel: Hotel) {
+    const room = hotel.rooms.find(room => room.id === roomId);
+    hotel.rooms = [room];
   }
 }

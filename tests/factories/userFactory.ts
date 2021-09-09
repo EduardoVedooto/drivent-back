@@ -7,7 +7,7 @@ import Session from "@/entities/Session";
 export async function createUser() {
   const user = User.create({
     email: faker.internet.email(),
-    password: "123456"
+    password: "123456",
   });
 
   await user.save();
@@ -15,13 +15,16 @@ export async function createUser() {
 }
 
 export async function createSession(userId: number) {
-  const token = jwt.sign({
-    userId
-  }, process.env.JWT_SECRET);
+  const token = jwt.sign(
+    {
+      userId,
+    },
+    process.env.JWT_SECRET
+  );
 
-   const session = Session.create({
+  const session = Session.create({
     userId,
-    token
+    token,
   });
 
   await session.save();

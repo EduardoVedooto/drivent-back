@@ -36,7 +36,7 @@ export default class Booking extends BaseEntity {
   hotelOption: HotelOption;
 
   @OneToMany(() => ActivityBooking, activityBooking => activityBooking.booking)
-  activityBooking: ActivityBooking;
+  activityBookings: ActivityBooking[];
 
   static async createNew( { enrollmentId, ticketOptionId, hotelOptionId }: BookingInfo ) {
     const bookingInfo = {

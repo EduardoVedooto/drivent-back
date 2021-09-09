@@ -10,6 +10,7 @@ import Room from "./Room";
 import Booking from "./Booking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 import HotelData from "@/interfaces/hotel";
+import BookingsRooms from "./bookingRoom";
 
 @Entity("hotels")
 export default class Hotel extends BaseEntity {
@@ -38,28 +39,34 @@ export default class Hotel extends BaseEntity {
       relations: ["hotelOption"],
     });
     if (!booking) throw new CannotPickHotelError(noPaymentDetails, "1");
+
     if (!booking?.isPaid) {
       throw new CannotPickHotelError(noPaymentDetails, "1");
     }
     const hasUserPayedForHotel = booking.hotelOption.price !== 0;
     if (!hasUserPayedForHotel) throw new CannotPickHotelError(noHotelOptionDetails, "2");
-    const hotels = (await this.find({ order: { id: "ASC" } })) as HotelData[];
-    hotels.forEach((hotel) => {
-      this.addAccommodationType(hotel);
-      this.bedsAvailable(hotel);
-      delete hotel.rooms;
-    });
-    return hotels;
+
+    const hotelWithBookedRoom = await BookingsRooms.findGuest(userId);
+    if (hotelWithBookedRoom) return [hotelWithBookedRoom];
+    else {
+      const hotels = (await this.find({ order: { id: "ASC" } })) as HotelData[];
+      hotels.forEach((hotel) => {
+        this.addAccommodationType(hotel);
+        this.bedsAvailable(hotel);
+        delete hotel.rooms;
+      });
+      return hotels;
+    }
   }
 
   static addAccommodationType(hotel: HotelData) {
     const accommodations = [];
-    const hasSingleRoom = !!hotel.rooms.find(room => room.bedCount === 1);
-    const hasDoubleRoom = !!hotel.rooms.find(room => room.bedCount === 2);
-    const hasTripleRoom = !!hotel.rooms.find(room => room.bedCount === 3);
-    if(hasSingleRoom) accommodations.push("Single");
-    if(hasDoubleRoom) accommodations.push("Double");
-    if(hasTripleRoom) accommodations.push("Triple");
+    const hasSingleRoom = !!hotel.rooms.find((room) => room.bedCount === 1);
+    const hasDoubleRoom = !!hotel.rooms.find((room) => room.bedCount === 2);
+    const hasTripleRoom = !!hotel.rooms.find((room) => room.bedCount === 3);
+    if (hasSingleRoom) accommodations.push("Single");
+    if (hasDoubleRoom) accommodations.push("Double");
+    if (hasTripleRoom) accommodations.push("Triple");
     hotel.accommodationsType = accommodations;
   }
 

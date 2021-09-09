@@ -64,6 +64,9 @@ describe("GET /rooms/:hotelID", () => {
         const body = { roomId };
         const response = await agent.post(`/booking-room`).set(createAuthHeader(token)).send(body);
         expect(response.status).toEqual(201);
+        expect(response.body).toHaveProperty("rooms");
+        expect(response.body).toHaveProperty("imgUrl");
+        expect(response.body).toHaveProperty("name");
     })
     it("should return status 409 when user already has a room", async() => {
         const token = await generateData();

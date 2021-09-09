@@ -45,7 +45,7 @@ async function generateData() {
 }
 
 describe("POST /booking", () => {
-  it("should create a new booking when receive a valid body", async () => {
+  it("should create a new booking or update an existing one when receive a valid body", async () => {
     const { session, enrollment, body } = await generateData();
 
     const response = await agent
@@ -84,21 +84,6 @@ describe("POST /booking", () => {
     expect(response.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
 
-  it("should return CONFLICT (409) for bookings that are already done", async () => {
-    const { session, body } = await generateData();
-
-    await agent
-      .post("/booking")
-      .send(body)
-      .set("Authorization", `Bearer ${session.token}`);
-
-    const response = await agent
-      .post("/booking")
-      .send(body)
-      .set("Authorization", `Bearer ${session.token}`);
-
-    expect(response.statusCode).toEqual(httpStatus.CONFLICT);
-  });
 });
 
 describe("GET /booking", () => {

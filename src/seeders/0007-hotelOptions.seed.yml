@@ -5,5 +5,5 @@ seeds:
         price: 0
     - HotelOption:
         id: 2
-        name: "Drivent"
+        name: "Com hotel"
         price: 35000

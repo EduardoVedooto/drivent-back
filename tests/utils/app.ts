@@ -75,7 +75,7 @@ export async function createBasicHotelOptions() {
     price: 0,
   });
   const ho2 = HotelOption.create({
-    name: "Drivent",
+    name: "Com hotel",
     price: 35000,
   });
 

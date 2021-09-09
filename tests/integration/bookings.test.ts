@@ -64,7 +64,7 @@ describe("POST /booking", () => {
           price: 25000,
         }),
         hotelOption: expect.objectContaining({
-          name: "Drivent",
+          name: "Com hotel",
           price: 35000,
         }),
       })

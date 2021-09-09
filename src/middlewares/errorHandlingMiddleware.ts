@@ -10,6 +10,7 @@ import NotFoundError from "@/errors/NotFoundError";
 import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
+import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware(
@@ -57,6 +58,12 @@ export default function errorHandlingMiddleware(
 
   if (err instanceof NotFoundBooking) {
     return res.status(httpStatus.NOT_FOUND).send({
+      message: err.message
+    });
+  }
+
+  if (err instanceof NotAllowedUpdateBooking) {
+    return res.status(httpStatus.NOT_ACCEPTABLE).send({
       message: err.message
     });
   }

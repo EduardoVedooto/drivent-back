@@ -52,7 +52,7 @@ async function createUserToken(hotel: boolean) {
   await Session.createNew(user.id, token);
   const enrollment = await createEnrollment(user.id);
   if (hotel) await createBookingWithHotel(enrollment.id);
-  else await createBooking(enrollment.id);
+  else await createBooking(enrollment.id, false);
   return { token, enrollmentId: enrollment.id };
 }
 

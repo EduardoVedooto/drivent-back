@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 
 import * as service from "@/services/client/activities";
-import InvalidDate from "@/errors/InvalidDate";
-import dateSchema from "@/schemas/date";
 
 export async function getAllDays(req: Request, res: Response) {
   const result = await service.getAllDays();
@@ -11,10 +9,7 @@ export async function getAllDays(req: Request, res: Response) {
 }
 
 export async function getByDateTextByLocation(req: Request, res: Response) {
-  const { dateText } = req.params;
-
-  const { error } = dateSchema.validate(dateText);
-  if (error) throw new InvalidDate(dateText);
+  const dateText = req.dateParam.ISOFormat;
   const result = await service.getByDateTextByLocation(dateText);
   res.status(httpStatus.OK).send(result);
 }

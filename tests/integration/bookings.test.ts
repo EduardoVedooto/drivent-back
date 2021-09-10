@@ -96,7 +96,6 @@ describe("POST /booking", () => {
 
     expect(response.statusCode).toEqual(httpStatus.NOT_ACCEPTABLE);
   });
-
 });
 
 describe("GET /booking", () => {

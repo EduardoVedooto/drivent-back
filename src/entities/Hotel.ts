@@ -38,6 +38,7 @@ export default class Hotel extends BaseEntity {
       throw new CannotPickHotelError(details);
     }
     const bookingRoom = await BookingsRooms.findGuest(userId);
+
     if (bookingRoom) return [bookingRoom];
     else {
       const hotels = (await this.find({ order: { id: "ASC" } })) as HotelData[];

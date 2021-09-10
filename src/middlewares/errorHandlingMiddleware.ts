@@ -18,7 +18,7 @@ export default function errorHandlingMiddleware(
   err: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction // eslint-disable-line
 ) {
   if (err instanceof InvalidEmailError) {
     return res.status(httpStatus.BAD_REQUEST).send({

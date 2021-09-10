@@ -10,11 +10,11 @@ export async function getAllDays(req: Request, res: Response) {
   res.status(httpStatus.OK).send(result);
 }
 
-export async function getWithDateTextByLocation(req: Request, res: Response) {
+export async function getByDateTextByLocation(req: Request, res: Response) {
   const { dateText } = req.params;
 
   const { error } = dateSchema.validate(dateText);
   if (error) throw new InvalidDate(dateText);
-  const result = await service.getWithDateTextByLocation(dateText);
+  const result = await service.getByDateTextByLocation(dateText);
   res.status(httpStatus.OK).send(result);
 }

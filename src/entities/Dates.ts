@@ -22,7 +22,7 @@ export default class Dates extends BaseEntity {
     return this.find();
   }
 
-  static async getWithDateText(dateText: string) {
+  static async getByDateText(dateText: string) {
     return this.findOne({ where: { day: dateText } });
   }
 }

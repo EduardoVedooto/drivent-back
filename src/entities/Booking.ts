@@ -7,7 +7,6 @@ import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import BookingInfo from "@/interfaces/bookingInfo";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
 import ActivityBooking from "./ActivityBooking";
-import ConflictError from "@/errors/ConflictError";
 
 @Entity("bookings")
 export default class Booking extends BaseEntity {

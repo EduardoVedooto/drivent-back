@@ -4,10 +4,10 @@ import httpStatus from "http-status";
 import * as service from "@/services/client/booking";
 import BodyInfoForBooking from "@/interfaces/bodyInfoForBooking";
 
-export async function createBooking(req: Request, res: Response) {
+export async function createOrUpdateBooking(req: Request, res: Response) {
   const { type, hotel, enrollmentId } = req.body as BodyInfoForBooking;
 
-  const booking = await service.createBooking({ type, hotel, enrollmentId });
+  const booking = await service.createOrUpdateBooking({ type, hotel, enrollmentId });
   if(!booking) return res.sendStatus(httpStatus.NOT_FOUND);
 
   res.status(httpStatus.CREATED).send(booking);

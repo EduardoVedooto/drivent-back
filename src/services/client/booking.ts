@@ -5,7 +5,7 @@ import Enrollment from "@/entities/Enrollment";
 import TicketOption from "@/entities/TicketOption";
 import HotelOption from "@/entities/HotelOption";
 
-export async function createBooking({ type, hotel, enrollmentId }: BodyInfoForBooking) {
+export async function createOrUpdateBooking({ type, hotel, enrollmentId }: BodyInfoForBooking) {
   const ticketOptionId = await TicketOption.getTicketOptionId(type);
   const hotelOptionId = await HotelOption.getHotelOptionId(hotel);
 
@@ -14,7 +14,7 @@ export async function createBooking({ type, hotel, enrollmentId }: BodyInfoForBo
 
   const bookingInfo = { enrollmentId, ticketOptionId, hotelOptionId } as BookingInfo;
 
-  const booking = await Booking.createNew(bookingInfo);
+  const booking = await Booking.createOrUpdate(bookingInfo);
   return booking;
 }
 

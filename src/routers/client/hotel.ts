@@ -4,6 +4,6 @@ import * as controller from "@/controllers/client/hotel";
 
 const router = Router();
 
-router.get("/", controller.getHotels);
+router.get("/:bypassParam?", controller.getHotels);
 
 export default router;

@@ -11,6 +11,7 @@ import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 import InvalidDate from "@/errors/InvalidDate";
+import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware(
@@ -62,6 +63,12 @@ export default function errorHandlingMiddleware(
     });
   }
 
+  if (err instanceof NotAllowedUpdateBooking) {
+    return res.status(httpStatus.NOT_ACCEPTABLE).send({
+      message: err.message
+    });
+  }
+
   if (err instanceof AlreadyPaidBooking) {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message
@@ -71,7 +78,7 @@ export default function errorHandlingMiddleware(
   if (err instanceof CannotPickHotelError) {
     return res
       .status(httpStatus.FORBIDDEN)
-      .send({ message: err.message, details: err.details });
+      .send({ message: err.message, details: err.details, driventCode: err.driventCode });
   }
 
   if (err instanceof InvalidDate) {

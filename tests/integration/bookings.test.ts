@@ -45,7 +45,7 @@ async function generateData() {
 }
 
 describe("POST /booking", () => {
-  it("should create a new booking when receive a valid body", async () => {
+  it("should create a new booking or update an existing one when receive a valid body", async () => {
     const { session, enrollment, body } = await generateData();
 
     const response = await agent
@@ -64,14 +64,14 @@ describe("POST /booking", () => {
           price: 25000,
         }),
         hotelOption: expect.objectContaining({
-          name: "Drivent",
+          name: "Com Hotel",
           price: 35000,
         }),
       })
     );
   });
 
-  it("should return NOT FOUNd (404) for invalid enrollmentId", async () => {
+  it("should return NOT FOUNd (404) for enrollmentId that doesn't exist", async () => {
     const { session, enrollment, body } = await generateData();
 
     body.enrollmentId = enrollment.id + 10;
@@ -84,20 +84,17 @@ describe("POST /booking", () => {
     expect(response.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
 
-  it("should return CONFLICT (409) for bookings that are already done", async () => {
-    const { session, body } = await generateData();
+  it("should return NOT ACCEPTABLE (406) when trying to update booking, but payment is already done", async () => {
+    const { session, enrollment, body } = await generateData();
 
-    await agent
-      .post("/booking")
-      .send(body)
-      .set("Authorization", `Bearer ${session.token}`);
+    await createBooking(enrollment.id, true);
 
     const response = await agent
       .post("/booking")
       .send(body)
       .set("Authorization", `Bearer ${session.token}`);
 
-    expect(response.statusCode).toEqual(httpStatus.CONFLICT);
+    expect(response.statusCode).toEqual(httpStatus.NOT_ACCEPTABLE);
   });
 });
 
@@ -105,7 +102,7 @@ describe("GET /booking", () => {
   it("should return an array containing all booking", async () => {
     const { session, enrollment } = await generateData();
 
-    await createBooking(enrollment.id);
+    await createBooking(enrollment.id, false);
 
     const response = await agent
       .get("/booking")
@@ -147,7 +144,7 @@ describe("GET /booking/:enrollmentId/find", () => {
   it("should return an object with booking info for an specific enrollmentId", async () => {
     const { session, enrollment } = await generateData();
 
-    await createBooking(enrollment.id);
+    await createBooking(enrollment.id, false);
 
     const response = await agent
       .get(`/booking/${enrollment.id}/find`)
@@ -196,7 +193,7 @@ describe("POST /booking/:bookingId/payment", () => {
   it("should return status OK (201) when receives payment", async () => {
     const { session, enrollment } = await generateData();
 
-    const booking = await createBooking(enrollment.id);
+    const booking = await createBooking(enrollment.id, false);
 
     const response = await agent
       .post(`/booking/${booking.id}/payment`)
@@ -209,7 +206,7 @@ describe("POST /booking/:bookingId/payment", () => {
   it("should return status CONFLICT (409) when payment is already done", async () => {
     const { session, enrollment } = await generateData();
 
-    const booking = await createBooking(enrollment.id);
+    const booking = await createBooking(enrollment.id, false);
 
     await agent
       .post(`/booking/${booking.id}/payment`)
@@ -224,7 +221,7 @@ describe("POST /booking/:bookingId/payment", () => {
     expect(response.statusCode).toEqual(httpStatus.CONFLICT);
   });
 
-  it("should return status CONFLICT (409) when payment is already done", async () => {
+  it("should return status NOT_FOUND (404) when booking with bookingId cant be found", async () => {
     const { session } = await generateData();
 
     const notExistingBookingId = 123456789;

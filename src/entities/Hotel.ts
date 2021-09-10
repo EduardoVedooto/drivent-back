@@ -27,19 +27,29 @@ export default class Hotel extends BaseEntity {
   rooms: Room[];
 
   static async getHotelsForUser(userId: number) {
-    const details = [
+    const noPaymentDetails = [
       "Você precisa ter confirmado o pagamento antes de fazer a escolha de hospedagem",
     ];
+    const noHotelOptionDetails = [
+      "Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de ativideades"
+    ];
     const enrollment = await Enrollment.getByUserIdWithAddress(userId);
-    if (!enrollment) throw new CannotPickHotelError(details);
-    const booking = await Booking.getByEnrollmentId(enrollment.id);
-    if (!booking) throw new CannotPickHotelError(details);
-    if (!booking?.isPaid) {
-      throw new CannotPickHotelError(details);
-    }
-    const bookingRoom = await BookingsRooms.findGuest(userId);
+    if (!enrollment) throw new CannotPickHotelError(noPaymentDetails, "1");
+    const booking = await Booking.getByEnrollmentId(enrollment.id, {
+      relations: ["hotelOption"],
+    });
+    if (!booking) throw new CannotPickHotelError(noPaymentDetails, "1");
 
-    if (bookingRoom) return [bookingRoom];
+    if (!booking?.isPaid) {
+      throw new CannotPickHotelError(noPaymentDetails, "1");
+    }
+    
+    const hasUserPayedForHotel = booking.hotelOption.price !== 0;
+    if (!hasUserPayedForHotel) throw new CannotPickHotelError(noHotelOptionDetails, "2");
+
+    const hotelWithBookedRoom = await BookingsRooms.findGuest(userId);
+    if (hotelWithBookedRoom) return [hotelWithBookedRoom];
+
     else {
       const hotels = (await this.find({ order: { id: "ASC" } })) as HotelData[];
       hotels.forEach((hotel) => {

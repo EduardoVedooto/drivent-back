@@ -62,10 +62,22 @@ describe("GET /hotels", () => {
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(403);
   });
+  it("should return status 403 when the booking does not include a hotel", async () => {
+    const user = await createUser();
+    const token = createToken(user.id);
+    await Session.createNew(user.id, token);
+    const enrollment = await createEnrollment(user.id);
+    const booking = await createBooking(enrollment.id, true);
+    booking.isPaid = true;
+    booking.save();
+    const response = await agent.get("/hotels").set(createAuthHeader(token));
+    expect(response.status).toEqual(403);
+  });
   it("should return hotels options", async () => {
     const { token } = await createUserToken(true);
     const response = await agent.get("/hotels").set(createAuthHeader(token));
     expect(response.status).toEqual(200);
+
     const DrivenResort = response.body.find(
       (hotel: HotelData) => hotel.name === "Driven Resort"
     );

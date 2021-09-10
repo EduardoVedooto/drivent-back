@@ -5,6 +5,7 @@ import app, { init } from "@/app";
 import { clearDatabase, endConnection } from "../utils/database";
 import { createUser, createSession } from "../factories/userFactory";
 import { createBasicSettings, createDates } from "../utils/app";
+import { createActivitiesForDate, createActivityLocations } from "../factories/activitiyFactory"; 
 
 const agent = supertest(app);
 
@@ -55,5 +56,30 @@ describe("GET /activities/dates", () => {
     const response = await agent.get("/activities/dates").set("Authorization", "Bearer INVALID_TOKEN");
     
     expect(response.statusCode).toBe(httpStatus.UNAUTHORIZED);
+  });
+});
+
+describe("GET /activities/date/:dateText", () => {
+  it("should return array of activities by location for the date", async () => {
+    const user = await createUser();
+    const session = await createSession(user.id);
+    const dates = await createDates();
+    const date = dates[0];
+    const dateText = date.day;
+    await createActivityLocations();
+    await createActivitiesForDate(date);
+
+    const response = await agent.get(`/activities/date/${dateText}`).set("Authorization", `Bearer ${session.token}`);
+    
+    expect(response.statusCode).toBe(httpStatus.OK);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          activities: expect.any(Object),
+        }),
+      ])
+    );
   });
 });

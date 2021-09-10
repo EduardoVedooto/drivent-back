@@ -10,6 +10,7 @@ import NotFoundError from "@/errors/NotFoundError";
 import NotFoundBooking from "@/errors/NotFoundBooking";
 import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
+import InvalidDate from "@/errors/InvalidDate";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
 
 /* eslint-disable-next-line */
@@ -17,7 +18,7 @@ export default function errorHandlingMiddleware(
   err: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction // eslint-disable-line
 ) {
   if (err instanceof InvalidEmailError) {
     return res.status(httpStatus.BAD_REQUEST).send({
@@ -78,6 +79,12 @@ export default function errorHandlingMiddleware(
     return res
       .status(httpStatus.FORBIDDEN)
       .send({ message: err.message, details: err.details, driventCode: err.driventCode });
+  }
+
+  if (err instanceof InvalidDate) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .send({ message: err.message });
   }
 
   /* eslint-disable-next-line no-console */

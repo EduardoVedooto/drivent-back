@@ -1,0 +1,89 @@
+seeds:
+  - Activities:
+      id: 1
+      name: "Minecraft, do quarto ao estrelato"
+      dateId: 1
+      activityLocationId: 1
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 10
+  - Activities:
+      id: 2
+      name: "LeagueOfLegends vs Netflix"
+      dateId: 1
+      activityLocationId: 1
+      startsAt: "10:00"
+      endsAt: "11:00"
+      maxParticipants: 10
+  - Activities:
+      id: 3
+      name: "Como ficar rico com esse 1 truque"
+      dateId: 1
+      activityLocationId: 2
+      startsAt: "9:00"
+      endsAt: "11:00"
+      maxParticipants: 0
+  - Activities:
+      id: 4
+      name: "Discussão: Futuro do Universo Marvel"
+      dateId: 1
+      activityLocationId: 3
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 10
+  - Activities:
+      id: 5
+      name: "Programação de Jogos"
+      dateId: 2
+      activityLocationId: 1
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 10
+  - Activities:
+      id: 6
+      name: "Campeonato de Cosplay"
+      dateId: 2
+      activityLocationId: 1
+      startsAt: "09:00"
+      endsAt: "12:00"
+      maxParticipants: 10
+  - Activities:
+      id: 7
+      name: "Campeonato de Magic The Gathering"
+      dateId: 2
+      activityLocationId: 2
+      startsAt: "09:00"
+      endsAt: "11:00"
+      maxParticipants: 10
+  - Activities:
+      id: 8
+      name: "Faça seu próprio cosplay"
+      dateId: 2
+      activityLocationId: 3
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 0
+  - Activities:
+      id: 9
+      name: "Painel: Dubladores da TV Manchete"
+      dateId: 3
+      activityLocationId: 1
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 10
+  - Activities:
+      id: 10
+      name: "Banana! Banana??"
+      dateId: 3
+      activityLocationId: 2
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 0
+  - Activities:
+      id: 11
+      name: "Oficina de perucas"
+      dateId: 3
+      activityLocationId: 3
+      startsAt: "09:00"
+      endsAt: "10:00"
+      maxParticipants: 10

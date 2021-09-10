@@ -7,6 +7,7 @@ import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import BookingInfo from "@/interfaces/bookingInfo";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
 import ActivityBooking from "./ActivityBooking";
+import ConflictError from "@/errors/ConflictError";
 
 @Entity("bookings")
 export default class Booking extends BaseEntity {
@@ -29,10 +30,10 @@ export default class Booking extends BaseEntity {
   @JoinColumn()
   enrollment: Enrollment;
 
-  @ManyToOne(() => TicketOption, ticketOption => ticketOption.bookings)
+  @ManyToOne(() => TicketOption, (ticketOption) => ticketOption.bookings)
   ticketOption: TicketOption;
 
-  @ManyToOne(() => HotelOption, hotelOption => hotelOption.bookings)
+  @ManyToOne(() => HotelOption, (hotelOption) => hotelOption.bookings)
   hotelOption: HotelOption;
 
   @OneToMany(() => ActivityBooking, activityBooking => activityBooking.booking)
@@ -43,11 +44,11 @@ export default class Booking extends BaseEntity {
       isPaid: false,
       enrollmentId,
       ticketOptionId,
-      hotelOptionId
+      hotelOptionId,
     };
 
     const existingBooking = await Booking.findOne({
-      where: { enrollmentId }
+      where: { enrollmentId },
     });
 
     if( existingBooking && existingBooking.isPaid === false) {
@@ -63,11 +64,11 @@ export default class Booking extends BaseEntity {
       await createBooking.save();
     }
 
-    const booking = await this.findByEnrollmentId( enrollmentId );
+    const booking = await this.findByEnrollmentId(enrollmentId);
     return booking;
   }
 
-  static async confirmPayment( bookingId: number ) {
+  static async confirmPayment(bookingId: number) {
     const booking = await Booking.findOne({
       where: { id: bookingId },
     });
@@ -92,10 +93,10 @@ export default class Booking extends BaseEntity {
       .execute();
   }
 
-  static async findByEnrollmentId( enrollmentId: number ) {
+  static async findByEnrollmentId(enrollmentId: number) {
     const booking = await Booking.findOne({
       relations: ["ticketOption", "hotelOption"],
-      where: { enrollmentId }
+      where: { enrollmentId },
     });
 
     delete booking?.hotelOptionId;
@@ -111,17 +112,20 @@ export default class Booking extends BaseEntity {
       relations: ["ticketOption", "hotelOption"],
     });
 
-    booking.forEach(b => {
+    booking.forEach((b) => {
       delete b?.hotelOptionId;
       delete b?.ticketOptionId;
       delete b?.ticketOption.id;
       delete b?.hotelOption.id;
     });
-    
+
     return booking;
   }
 
-  static async getByEnrollmentId(enrollmentId: number) {
-    return this.findOne({ where: { enrollmentId } });
+  static async getByEnrollmentId(
+    enrollmentId: number,
+    options: Record<string, unknown>
+  ) {
+    return this.findOne({ where: { enrollmentId }, ...options });
   }
 }

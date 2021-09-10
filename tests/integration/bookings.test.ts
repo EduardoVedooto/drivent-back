@@ -71,7 +71,7 @@ describe("POST /booking", () => {
     );
   });
 
-  it("should return NOT FOUNd (404) for invalid enrollmentId", async () => {
+  it("should return NOT FOUNd (404) for enrollmentId that doesn't exist", async () => {
     const { session, enrollment, body } = await generateData();
 
     body.enrollmentId = enrollment.id + 10;
@@ -84,7 +84,7 @@ describe("POST /booking", () => {
     expect(response.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
 
-  it("should return NOT ACCEPTABLE (406) for invalid enrollmentId", async () => {
+  it("should return NOT ACCEPTABLE (406) when trying to update booking, but payment is already done", async () => {
     const { session, enrollment, body } = await generateData();
 
     await createBooking(enrollment.id, true);
@@ -96,7 +96,6 @@ describe("POST /booking", () => {
 
     expect(response.statusCode).toEqual(httpStatus.NOT_ACCEPTABLE);
   });
-
 });
 
 describe("GET /booking", () => {
@@ -222,7 +221,7 @@ describe("POST /booking/:bookingId/payment", () => {
     expect(response.statusCode).toEqual(httpStatus.CONFLICT);
   });
 
-  it("should return status CONFLICT (409) when payment is already done", async () => {
+  it("should return status NOT_FOUND (404) when booking with bookingId cant be found", async () => {
     const { session } = await generateData();
 
     const notExistingBookingId = 123456789;

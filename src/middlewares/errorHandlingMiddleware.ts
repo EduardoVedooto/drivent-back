@@ -77,7 +77,7 @@ export default function errorHandlingMiddleware(
   if (err instanceof CannotPickHotelError) {
     return res
       .status(httpStatus.FORBIDDEN)
-      .send({ message: err.message, details: err.details });
+      .send({ message: err.message, details: err.details, driventCode: err.driventCode });
   }
 
   /* eslint-disable-next-line no-console */

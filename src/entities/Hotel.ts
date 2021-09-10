@@ -26,7 +26,7 @@ export default class Hotel extends BaseEntity {
   @OneToMany(() => Room, (room) => room.hotel, { eager: true })
   rooms: Room[];
 
-  static async getHotelsForUser(userId: number) {
+  static async getHotelsForUser(userId: number, bypass: number) {
     const noPaymentDetails = [
       "Você precisa ter confirmado o pagamento antes de fazer a escolha de hospedagem",
     ];
@@ -43,14 +43,15 @@ export default class Hotel extends BaseEntity {
     if (!booking?.isPaid) {
       throw new CannotPickHotelError(noPaymentDetails, "1");
     }
-    
+
     const hasUserPayedForHotel = booking.hotelOption.price !== 0;
     if (!hasUserPayedForHotel) throw new CannotPickHotelError(noHotelOptionDetails, "2");
 
     const hotelWithBookedRoom = await BookingsRooms.findGuest(userId);
-    if (hotelWithBookedRoom) return [hotelWithBookedRoom];
 
-    else {
+    if (hotelWithBookedRoom && !bypass) {
+      return [hotelWithBookedRoom];
+    } else {
       const hotels = (await this.find({ order: { id: "ASC" } })) as HotelData[];
       hotels.forEach((hotel) => {
         this.addAccommodationType(hotel);

@@ -32,14 +32,13 @@ export default class BookingsRooms extends BaseEntity {
     if(existingBookingRoom) {
       existingBookingRoom.room = room;
       await existingBookingRoom.save();
-      return existingBookingRoom;
     } 
     else{
       const newBooking = this.create({ room, booking });
       await newBooking.save();
-      const bookedRoom = await this.findGuest(userId);
-      return bookedRoom;
     }
+    const bookedRoom = await this.findGuest(userId);
+    return bookedRoom;
   }
   
   static async findGuest(userId: number) {

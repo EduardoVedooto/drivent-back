@@ -47,4 +47,9 @@ export default class Activities extends BaseEntity {
     (activityBooking) => activityBooking.activity
   )
   activityBookings: ActivityBooking[];
+
+  static async getActivityById(activityId: number) {
+    const activity = this.findOne(activityId);
+    return activity;
+  }
 }

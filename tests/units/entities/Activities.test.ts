@@ -10,6 +10,8 @@ jest.mock("typeorm", () => {
         Column:  () => {},
         OneToMany: () => {},
         ManyToOne: () => {},
+        OneToOne: () => {},
+        JoinColumn: () => {}, 
     };
 });
 

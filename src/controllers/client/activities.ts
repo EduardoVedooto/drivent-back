@@ -13,3 +13,8 @@ export async function getByDateTextByLocation(req: Request, res: Response) {
   const result = await service.getByDateTextByLocation(dateText);
   res.status(httpStatus.OK).send(result);
 }
+
+export async function getAllActivities(req: Request, res: Response) {
+  const result = await service.getAllActivities();
+  res.status(httpStatus.OK).send(result);
+}

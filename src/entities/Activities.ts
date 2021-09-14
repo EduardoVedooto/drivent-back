@@ -47,4 +47,12 @@ export default class Activities extends BaseEntity {
     (activityBooking) => activityBooking.activity
   )
   activityBookings: ActivityBooking[];
+
+  static async getAll() {
+    const activities = await Activities.find({
+      relations: ["activityBookings"],
+    });
+    
+    return activities;
+  }
 }

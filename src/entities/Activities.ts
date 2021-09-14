@@ -52,4 +52,12 @@ export default class Activities extends BaseEntity {
     const activity = this.findOne(activityId);
     return activity;
   }
+  
+  static async getAll() {
+    const activities = await Activities.find({
+      relations: ["activityBookings"],
+    });
+    
+    return activities;
+  }
 }

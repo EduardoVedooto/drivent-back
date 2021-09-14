@@ -20,3 +20,8 @@ export async function postActivityEnrollment(req: Request, res: Response) {
   await service.postActivityEnrollment(activityId, bookingId);
   res.sendStatus(httpStatus.CREATED);
 }
+
+export async function getAllActivities(req: Request, res: Response) {
+  const result = await service.getAllActivities();
+  res.status(httpStatus.OK).send(result);
+}

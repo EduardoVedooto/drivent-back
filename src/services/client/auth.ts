@@ -1,11 +1,7 @@
 import UnauthorizedError from "@/errors/Unauthorized";
 import User from "@/entities/User";
 import { createToken } from "@/utils/app";
-import { cacheClient } from "@/cache";
-
-export async function setUserSession(userId: number, token: string) {
-  cacheClient().set(`${userId}token`, token);
-}
+import { setUserSession } from "@/utils/session";
 
 export async function signIn(email: string, password: string) {
   const user = await User.findByEmailAndPassword(email, password);

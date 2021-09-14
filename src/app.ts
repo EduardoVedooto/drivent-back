@@ -22,7 +22,7 @@ app.use(router);
 app.use(errorHandlingMiddleware);
 
 export async function init() {
-  createCacheClient();
+  await createCacheClient();
   await connectDatabase();
 }
 

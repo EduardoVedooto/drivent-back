@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import supertest from "supertest";
 
-import app, { init } from "@/app";
+import app, { init } from "../../src/app";
 import { clearDatabase, endConnection } from "../utils/database";
 import { createUser, createSession } from "../factories/userFactory";
 import { createBasicSettings, createDates } from "../utils/app";

@@ -2,7 +2,6 @@ import CpfNotAvailableError from "@/errors/CpfNotAvailable";
 import EnrollmentData from "@/interfaces/enrollment";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, getManager } from "typeorm";
 import Address from "@/entities/Address";
-import { address } from "faker";
 
 @Entity("enrollments")
 export default class Enrollment extends BaseEntity {
@@ -56,10 +55,11 @@ export default class Enrollment extends BaseEntity {
     await getManager().transaction(async transactionalEntityManager => {
       enrollment ||= Enrollment.create();
       enrollment.populateFromData(data);
+
       await transactionalEntityManager.save(enrollment);
 
-      enrollment.address.enrollmentId = enrollment.id;
-      await transactionalEntityManager.save(address);
+      enrollment.address.enrollment = enrollment;
+      await transactionalEntityManager.save(enrollment.address);
     });
 
     return enrollment;

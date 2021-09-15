@@ -12,6 +12,7 @@ import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 import InvalidDate from "@/errors/InvalidDate";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
+import CannotGetCertificate from "@/errors/CertificateBeforeEventEnds";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware(
@@ -85,6 +86,12 @@ export default function errorHandlingMiddleware(
     return res
       .status(httpStatus.BAD_REQUEST)
       .send({ message: err.message });
+  }
+
+  if(err instanceof CannotGetCertificate) {
+    return res
+      .status(httpStatus.NOT_ACCEPTABLE)
+      .send({ message: err.message, details: err.details, driventCode: err.driventCode });
   }
 
   /* eslint-disable-next-line no-console */

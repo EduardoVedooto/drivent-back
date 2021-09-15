@@ -1,6 +1,6 @@
 import Certificate from "@/entities/Certificate";
 import Setting from "@/entities/Setting";
-import CannotGetCertificate from "@/errors/CertificateBeforeEventEnds";
+import CannotGetCertificate from "@/errors/CannotGetCertificate";
 
 export async function get(userId: number) {
   const eventSettings = await Setting.getEventSettings();
@@ -9,5 +9,5 @@ export async function get(userId: number) {
     throw new CannotGetCertificate();
   }
 
-  return await Certificate.getForUserId(userId);
+  return await Certificate.getByUserId(userId);
 }

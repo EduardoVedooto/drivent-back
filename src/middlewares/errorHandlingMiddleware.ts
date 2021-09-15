@@ -12,7 +12,7 @@ import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 import InvalidDate from "@/errors/InvalidDate";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
-import CannotGetCertificate from "@/errors/CertificateBeforeEventEnds";
+import CannotGetCertificate from "@/errors/CannotGetCertificate";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware(

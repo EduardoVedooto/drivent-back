@@ -1,5 +1,5 @@
 export default class Certificate {
-  static async getForUserId(userId: number) {
+  static async getByUserId(userId: number) {
     return "em breve"; 
   }
 }

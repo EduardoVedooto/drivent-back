@@ -1,7 +1,8 @@
 import CpfNotAvailableError from "@/errors/CpfNotAvailable";
 import EnrollmentData from "@/interfaces/enrollment";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, getManager } from "typeorm";
 import Address from "@/entities/Address";
+import { address } from "faker";
 
 @Entity("enrollments")
 export default class Enrollment extends BaseEntity {
@@ -51,13 +52,15 @@ export default class Enrollment extends BaseEntity {
     if(enrollment && enrollment.userId !== data.userId) {
       throw new CpfNotAvailableError(data.cpf);
     }
+    
+    await getManager().transaction(async transactionalEntityManager => {
+      enrollment ||= Enrollment.create();
+      enrollment.populateFromData(data);
+      await transactionalEntityManager.save(enrollment);
 
-    enrollment ||= Enrollment.create();
-    enrollment.populateFromData(data);
-    await enrollment.save();
-
-    enrollment.address.enrollmentId = enrollment.id;
-    await enrollment.address.save();
+      enrollment.address.enrollmentId = enrollment.id;
+      await transactionalEntityManager.save(address);
+    });
 
     return enrollment;
   }

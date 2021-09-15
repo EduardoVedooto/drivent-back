@@ -45,3 +45,8 @@ export async function resetPassword(email: string) {
     sgMail.send(msg);
   }
 }
+
+export async function saveNewPassword(password: string, token: string) {
+  const email = await requestNewPassword.getEmailByToken(token);
+  return await User.updatePassword(email, password);
+}

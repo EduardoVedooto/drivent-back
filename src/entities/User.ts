@@ -52,5 +52,16 @@ export default class User extends BaseEntity {
     const user = await this.findOne({ where: { email } });
     return user ? true : false;
   }
+
+  static async updatePassword(email: string, password: string) {    
+    await this.createQueryBuilder()
+      .update(this)
+      .set({ password: this.hashPassword(password) })
+      .where("email = :email", { email })
+      .execute();
+    const user = await this.findOne({ where: { email } });
+    delete user.password;
+    return user;
+  }
 }
 

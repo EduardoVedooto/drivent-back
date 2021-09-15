@@ -13,3 +13,9 @@ export async function resetPassword(req: Request, res: Response) {
   service.resetPassword(email);
   res.sendStatus(httpStatus.OK);
 }
+
+export async function saveNewPassword(req: Request, res: Response) {
+  const { password, token }: {password: string, token: string} = req.body;
+  const user = await service.saveNewPassword(password, token);
+  res.status(httpStatus.CREATED).send(user);
+}

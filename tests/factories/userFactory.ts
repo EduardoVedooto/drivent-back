@@ -2,7 +2,8 @@ import faker from "faker";
 import jwt from "jsonwebtoken";
 
 import User from "@/entities/User";
-import Session from "@/entities/Session";
+import { createCacheClient, cacheClient } from "@/cache";
+import { WrappedNodeRedisClient } from "handy-redis";
 
 export async function createUser() {
   const user = User.create({
@@ -22,12 +23,14 @@ export async function createSession(userId: number) {
     process.env.JWT_SECRET
   );
 
-  const session = Session.create({
+  const session = {
     userId,
     token,
-  });
+  };
 
-  await session.save();
+  await createCacheClient();
+  const client: WrappedNodeRedisClient = cacheClient();
+  await client.set(`${userId}token`, token);
 
   return session;
 }

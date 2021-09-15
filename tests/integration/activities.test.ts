@@ -157,6 +157,29 @@ describe("POST /activities/enroll", () => {
       .post("/activities/enroll")
       .send(body)
       .set("Authorization", `Bearer ${session.token}`);
+    expect(response.status).toEqual(httpStatus.BAD_REQUEST);
+  });
+
+  it("should returns status 409 when trying to resubscribe to an activity", async () => {
+    await createDates();
+    const user = await createUser();
+    const session = await createSession(user.id);
+    const enrollment = await createEnrollment(user.id);
+    const booking = await createBooking(enrollment.id, true);
+    const dates = await createDates();
+    const date = dates[0];
+    await createActivityLocations();
+    const activities = await createActivitiesForDate(date);
+
+    await createActivityEnrollment(activities[0].id, booking.id);
+
+    const response = await agent
+      .post("/activities/enroll")
+      .send({ 
+        activityId: activities[1].id, 
+        bookingId: booking.id
+      })
+      .set("Authorization", `Bearer ${session.token}`);
     expect(response.status).toEqual(httpStatus.CONFLICT);
   });
 });

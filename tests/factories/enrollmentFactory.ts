@@ -8,7 +8,7 @@ export async function createEnrollment(userId: number) {
     cpf: "012.345.678-90",
     birthday: "01-09-2021",
     phone: faker.phone.phoneNumber(),
-    image: "data:image/png;base64," + btoa(faker.image.imageUrl()), 
+    image: "data:image/png;base64,", 
     userId,
     address: {
       cep: faker.address.zipCode(),

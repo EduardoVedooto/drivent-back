@@ -1,0 +1,25 @@
+seeds:
+    - Enrollment:
+        id: 1
+        name: "User1"
+        cpf: "14190475742"
+        birthday: "1990/04/02"
+        phone: "+5521971275566"
+        userId: 1
+        image: "data:image/png;base64,QzpcZmFrZXBhdGhcYmFuYW5hLmpwZWc="
+    - Enrollment:
+        id: 2
+        name: "User2"
+        cpf: "93233452020"
+        birthday: "1991/08/05"
+        phone: "+5521971275567"
+        userId: 2
+        image: "data:image/png;base64,QzpcZmFrZXBhdGhcYmFuYW5hLmpwZWc="
+    - Enrollment:
+        id: 3
+        name: "User3"
+        cpf: "14623353060"
+        birthday: "2001/12/31"
+        phone: "+5521971275568"
+        userId: 3
+        image: "data:image/png;base64,QzpcZmFrZXBhdGhcYmFuYW5hLmpwZWc="

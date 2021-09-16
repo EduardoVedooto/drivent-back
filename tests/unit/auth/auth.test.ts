@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import * as auth from "../../src/services/client/auth";
-import * as userSession from "../../src/utils/session";
-import User from "../../src/entities/User";
-import "../../src/setup";
+import * as auth from "../../../src/services/client/auth";
+import * as userSession from "../../../src/utils/session";
+import User from "../../../src/entities/User";
+import "../../../src/setup";
 
 jest.mock("typeorm", () => {
   return {

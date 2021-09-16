@@ -13,5 +13,6 @@ export default joi.object({
     neighborhood: joi.string().required(), 
     addressDetail: joi.string().allow(null, "")
   }).required(),
-  phone: joi.string().pattern(/^\((\d){2}\) 9?(\d){4}-(\d){4}$/).min(14).max(15).required()
+  phone: joi.string().pattern(/^\((\d){2}\) 9?(\d){4}-(\d){4}$/).min(14).max(15).required(),
+  image: joi.string().min(1).required()
 });

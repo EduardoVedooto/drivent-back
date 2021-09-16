@@ -6,7 +6,8 @@ interface EnrollmentData {
     birthday: string,
     address: AddressData,
     phone: string, 
-    userId: number
+    userId: number,
+    image: string
 }
 
 export default EnrollmentData;

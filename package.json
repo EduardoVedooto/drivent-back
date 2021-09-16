@@ -59,15 +59,17 @@
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
+    "handy-redis": "^2.2.2",
     "http-status": "^1.5.0",
     "joi": "^17.4.2",
     "js-yaml": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.6.0",
     "readline-sync": "^1.4.10",
+    "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.34",
-    "uuid": "^8.3.2",
-    "typescript-transform-paths": "^3.3.1"
+    "typescript-transform-paths": "^3.3.1",
+    "uuid": "^8.3.2"
   }
 }

@@ -1,6 +1,6 @@
 import CpfNotAvailableError from "@/errors/CpfNotAvailable";
 import EnrollmentData from "@/interfaces/enrollment";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, getManager } from "typeorm";
 import Address from "@/entities/Address";
 
 @Entity("enrollments")
@@ -53,15 +53,18 @@ export default class Enrollment extends BaseEntity {
     let enrollment = await this.findOne({ where: { cpf: data.cpf } });
 
     if(enrollment && enrollment.userId !== data.userId) {
-      throw new CpfNotAvailableError(data.cpf);
+      throw new CpfNotAvailableError(data.cpf>);
     }
+    
+    await getManager().transaction(async transactionalEntityManager => {
+      enrollment ||= Enrollment.create();
+      enrollment.populateFromData(data);
 
-    enrollment ||= Enrollment.create();
-    enrollment.populateFromData(data);
-    await enrollment.save();
+      await transactionalEntityManager.save(enrollment);
 
-    enrollment.address.enrollment = enrollment;
-    await enrollment.address.save();
+      enrollment.address.enrollment = enrollment;
+      await transactionalEntityManager.save(enrollment.address);
+    });
 
     return enrollment;
   }

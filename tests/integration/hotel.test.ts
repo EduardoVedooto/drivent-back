@@ -16,17 +16,22 @@ import {
   createBookingWithHotel,
 } from "../factories/bookingFactory";
 import { createEnrollment } from "../factories/enrollmentFactory";
-import Session from "@/entities/Session";
 import { createToken } from "@/utils/app";
 import Hotel from "@/entities/Hotel";
 import HotelData from "@/interfaces/hotel";
 import { createBookingRoom } from "../factories/bookingRoomFactory";
+import { createCacheClient, cacheClient } from "@/cache";
+import { WrappedNodeRedisClient } from "handy-redis";
 
 const agent = supertest(app);
 let settings = null;
 
+let client: WrappedNodeRedisClient;
+
 beforeAll(async () => {
   await init();
+  await createCacheClient();
+  client = cacheClient();
 });
 
 let roomId: number;
@@ -44,12 +49,13 @@ beforeEach(async () => {
 afterAll(async () => {
   await clearDatabase();
   await endConnection();
+  await client.quit();
 });
 
 async function createUserToken(hotel: boolean) {
   const user = await createUser();
   const token = await createToken(user.id);
-  await Session.createNew(user.id, token);
+  await client.set(`${user.id}token`, token);
   const enrollment = await createEnrollment(user.id);
   if (hotel) await createBookingWithHotel(enrollment.id);
   else await createBooking(enrollment.id, false);
@@ -65,7 +71,7 @@ describe("GET /hotels", () => {
   it("should return status 403 when the booking does not include a hotel", async () => {
     const user = await createUser();
     const token = createToken(user.id);
-    await Session.createNew(user.id, token);
+    await client.set(`${user.id}token`, token);
     const enrollment = await createEnrollment(user.id);
     const booking = await createBooking(enrollment.id, true);
     booking.isPaid = true;

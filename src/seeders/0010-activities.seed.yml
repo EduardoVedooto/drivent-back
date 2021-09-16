@@ -44,8 +44,8 @@ seeds:
       name: "Campeonato de Cosplay"
       dateId: 2
       activityLocationId: 1
-      startsAt: "09:00"
-      endsAt: "12:00"
+      startsAt: "10:00"
+      endsAt: "12:30"
       maxParticipants: 10
   - Activities:
       id: 7
@@ -61,7 +61,7 @@ seeds:
       dateId: 2
       activityLocationId: 3
       startsAt: "09:00"
-      endsAt: "10:00"
+      endsAt: "10:30"
       maxParticipants: 0
   - Activities:
       id: 9

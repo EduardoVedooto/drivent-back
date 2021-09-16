@@ -1,4 +1,5 @@
 import Booking from "@/entities/Booking";
+import ActivityBooking from "@/entities/ActivityBooking";
 import {
   createBasicHotelOptions,
   createBasicTicketOptions,
@@ -74,4 +75,14 @@ export async function createBookingWithHotel(enrollmentId: number) {
   await booking.save();
 
   return booking;
+}
+
+export async function createActivityEnrollment(activityId: number, bookingId: number) {
+  const body = {
+    activityId,
+    bookingId
+  };
+  
+  const newEnrollment = await ActivityBooking.create(body);
+  await newEnrollment.save();
 }

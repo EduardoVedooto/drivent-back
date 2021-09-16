@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 import jwt from "jsonwebtoken";
 
-import * as sessionService from "@/services/client/session";
 import UnauthorizedError from "@/errors/Unauthorized";
+import { cacheClient } from "@/cache";
 
 interface JwtPayload {
     userId: number
@@ -20,9 +20,9 @@ export default async function authenticationMiddleware(req: Request, res: Respon
   
     const { userId } = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
 
-    const userSession = await sessionService.findSessionByToken(token);
+    const userCachedToken = await cacheClient().get(`${userId}token`);
 
-    if(userSession.token !== token) {
+    if(userCachedToken !== token) {
       throw new UnauthorizedError();
     }
 

@@ -12,6 +12,9 @@ import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 import InvalidDate from "@/errors/InvalidDate";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
+import CannotGetCertificate from "@/errors/CannotGetCertificate";
+import ActivityEnrollmentAlreadyExists from "@/errors/ActivityEnrollmentAlreadyExists";
+import ConflictBetweenActivities from "@/errors/ConflictBetweenActivities";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware(
@@ -84,6 +87,24 @@ export default function errorHandlingMiddleware(
   if (err instanceof InvalidDate) {
     return res
       .status(httpStatus.BAD_REQUEST)
+      .send({ message: err.message });
+  }
+
+  if(err instanceof CannotGetCertificate) {
+    return res
+      .status(httpStatus.NOT_ACCEPTABLE)
+      .send({ message: err.message, details: err.details, driventCode: err.driventCode });
+  }
+
+  if(err instanceof ActivityEnrollmentAlreadyExists) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .send({ message: err.message });
+  }
+
+  if(err instanceof ConflictBetweenActivities) {
+    return res
+      .status(httpStatus.CONFLICT)
       .send({ message: err.message });
   }
 

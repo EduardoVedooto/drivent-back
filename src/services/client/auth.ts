@@ -1,7 +1,7 @@
 import UnauthorizedError from "@/errors/Unauthorized";
 import User from "@/entities/User";
-import Session from "@/entities/Session";
 import { createToken } from "@/utils/app";
+import { setUserSession } from "@/utils/session";
 
 export async function signIn(email: string, password: string) {
   const user = await User.findByEmailAndPassword(email, password);
@@ -11,15 +11,14 @@ export async function signIn(email: string, password: string) {
   }
 
   const token = createToken(user.id);
-
-  await Session.createNew(user.id, token);
+  await setUserSession(user.id, token);
 
   return {
     user: {
       id: user.id,
-      email: user.email
+      email: user.email,
     },
 
-    token
+    token,
   };
 }

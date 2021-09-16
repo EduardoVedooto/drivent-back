@@ -127,4 +127,9 @@ export default class Booking extends BaseEntity {
   ) {
     return this.findOne({ where: { enrollmentId }, ...options });
   }
+
+  static async getBookingById(bookingId: number) {
+    const booking = await this.findOne(bookingId);
+    return booking;
+  }
 }

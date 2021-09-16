@@ -1,6 +1,6 @@
 import supertest from "supertest";
 
-import app, { init } from "@/app";
+import app, { init } from "../../src/app";
 import { clearDatabase, endConnection } from "../utils/database";
 import {
   createAuthHeader,
@@ -13,15 +13,19 @@ import {
 import { createUser } from "../factories/userFactory";
 import { createBookingWithHotel } from "../factories/bookingFactory";
 import { createEnrollment } from "../factories/enrollmentFactory";
-import Session from "@/entities/Session";
-import { createToken } from "@/utils/app";
-import Hotel from "@/entities/Hotel";
+import { createToken } from "../../src/utils/app";
+import Hotel from "../../src/entities/Hotel";
+import { createCacheClient, cacheClient } from "../../src/cache";
+import { WrappedNodeRedisClient } from "handy-redis";
 
 const agent = supertest(app);
 let settings = null;
+let client: WrappedNodeRedisClient;
 
 beforeAll(async () => {
   await init();
+  await createCacheClient();
+  client = cacheClient();
 });
 
 let roomId: number;
@@ -39,12 +43,13 @@ beforeEach(async () => {
 afterAll(async () => {
   await clearDatabase();
   await endConnection();
+  await client.quit();
 });
 
 async function generateData() {
   const user = await createUser();
   const token = createToken(user.id);
-  await Session.createNew(user.id, token);
+  await client.set(`${user.id}token`, token);
   const enrollment = await createEnrollment(user.id);
   await createBookingWithHotel(enrollment.id);
   return token;

@@ -5,7 +5,9 @@ import app, { init } from "@/app";
 import { clearDatabase, endConnection } from "../utils/database";
 import { createUser, createSession } from "../factories/userFactory";
 import { createBasicSettings, createDates } from "../utils/app";
-import { createActivitiesForDate, createActivityLocations } from "../factories/activitiyFactory"; 
+import { createActivitiesForDate, createActivityEnrollment, createActivityLocations } from "../factories/activitiyFactory"; 
+import { createEnrollment } from "../factories/enrollmentFactory";
+import { createBooking } from "../factories/bookingFactory";
 
 const agent = supertest(app);
 
@@ -81,5 +83,103 @@ describe("GET /activities/date/:dateText", () => {
         }),
       ])
     );
+  });
+});
+
+describe("POST /activities/enroll", () => {
+  it("should returns status 201 when body is valid", async () => {
+    await createDates();
+    const user = await createUser();
+    const session = await createSession(user.id);
+    const enrollment = await createEnrollment(user.id);
+    const booking = await createBooking(enrollment.id, true);
+    const dates = await createDates();
+    const date = dates[0];
+    await createActivityLocations();
+    const activities = await createActivitiesForDate(date);
+
+    const response = await agent
+      .post("/activities/enroll")
+      .send({ activityId: activities[0].id, bookingId: booking.id })
+      .set("Authorization", `Bearer ${session.token}`);
+    expect(response.status).toEqual(httpStatus.CREATED);
+  });
+
+  it("should returns status 404 when body is invalid (activityId invalid)", async () => {
+    await createDates();
+    const user = await createUser();
+    const session = await createSession(user.id);
+    const enrollment = await createEnrollment(user.id);
+    const booking = await createBooking(enrollment.id, true);
+
+    const response = await agent
+      .post("/activities/enroll")
+      .send({ activityId: -1, bookingId: booking.id })
+      .set("Authorization", `Bearer ${session.token}`);
+    expect(response.status).toEqual(httpStatus.NOT_FOUND);
+  });
+
+  it("should returns status 404 when body is invalid (bookingId invalid)", async () => {
+    await createDates();
+    const user = await createUser();
+    const session = await createSession(user.id);
+    const dates = await createDates();
+    const date = dates[0];
+    await createActivityLocations();
+    const activities = await createActivitiesForDate(date);
+
+    const response = await agent
+      .post("/activities/enroll")
+      .send({ activityId: activities[0].id, bookingId: -1 })
+      .set("Authorization", `Bearer ${session.token}`);
+    expect(response.status).toEqual(httpStatus.NOT_FOUND);
+  });
+
+  it("should returns status 409 when trying to resubscribe to an activity", async () => {
+    await createDates();
+    const user = await createUser();
+    const session = await createSession(user.id);
+    const enrollment = await createEnrollment(user.id);
+    const booking = await createBooking(enrollment.id, true);
+    const dates = await createDates();
+    const date = dates[0];
+    await createActivityLocations();
+    const activities = await createActivitiesForDate(date);
+
+    const body = { 
+      activityId: activities[0].id, 
+      bookingId: booking.id 
+    };
+
+    await createActivityEnrollment(body.activityId, body.bookingId);
+
+    const response = await agent
+      .post("/activities/enroll")
+      .send(body)
+      .set("Authorization", `Bearer ${session.token}`);
+    expect(response.status).toEqual(httpStatus.BAD_REQUEST);
+  });
+
+  it("should returns status 409 when trying to resubscribe to an activity", async () => {
+    await createDates();
+    const user = await createUser();
+    const session = await createSession(user.id);
+    const enrollment = await createEnrollment(user.id);
+    const booking = await createBooking(enrollment.id, true);
+    const dates = await createDates();
+    const date = dates[0];
+    await createActivityLocations();
+    const activities = await createActivitiesForDate(date);
+
+    await createActivityEnrollment(activities[0].id, booking.id);
+
+    const response = await agent
+      .post("/activities/enroll")
+      .send({ 
+        activityId: activities[1].id, 
+        bookingId: booking.id
+      })
+      .set("Authorization", `Bearer ${session.token}`);
+    expect(response.status).toEqual(httpStatus.CONFLICT);
   });
 });

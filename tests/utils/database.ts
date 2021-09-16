@@ -1,4 +1,5 @@
 import { getConnection } from "typeorm";
+import { createCacheClient, cacheClient } from "../../src/cache";
 
 function getEntities() {
   const entities = [];
@@ -24,6 +25,10 @@ export async function clearDatabase() {
       entities.push(entity);
     }
   }
+
+  await createCacheClient();
+  const client = cacheClient();
+  await client.flushdb();
 }
 
 export async function endConnection() {

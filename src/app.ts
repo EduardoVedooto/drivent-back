@@ -6,6 +6,7 @@ import cors from "cors";
 import "reflect-metadata";
 
 import connectDatabase from "@/database";
+import { createCacheClient } from "@/cache";
 import errorHandlingMiddleware from "@/middlewares/errorHandlingMiddleware";
 import router from "@/routers";
 
@@ -21,6 +22,7 @@ app.use(router);
 app.use(errorHandlingMiddleware);
 
 export async function init() {
+  await createCacheClient();
   await connectDatabase();
 }
 

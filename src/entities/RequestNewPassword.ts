@@ -23,7 +23,7 @@ export default class requestNewPassword extends BaseEntity {
       select: ["email", "createAt"] 
     });
     if(!request) throw new InvalidPasswordTokenError();
-    this.delete({ token });
+    this.delete({ email: request.email });
     const dateRequested = dayjs(request.createAt);
     const now = dayjs(Date.now());
     const hoursElapsed = now.diff(dateRequested, "h");

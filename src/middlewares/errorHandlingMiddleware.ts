@@ -15,6 +15,8 @@ import InvalidDate from "@/errors/InvalidDate";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
 import InvalidPasswordTokenError from "@/errors/InvalidPasswordTokenError";
 import PasswordTokenExpiredError from "@/errors/PasswordTokenExpiredError";
+import ActivityEnrollmentAlreadyExists from "@/errors/ActivityEnrollmentAlreadyExists";
+import ConflictBetweenActivities from "@/errors/ConflictBetweenActivities";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware(
@@ -105,6 +107,18 @@ export default function errorHandlingMiddleware(
   if (err instanceof InvalidDate) {
     return res
       .status(httpStatus.BAD_REQUEST)
+      .send({ message: err.message });
+  }
+
+  if(err instanceof ActivityEnrollmentAlreadyExists) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .send({ message: err.message });
+  }
+
+  if(err instanceof ConflictBetweenActivities) {
+    return res
+      .status(httpStatus.CONFLICT)
       .send({ message: err.message });
   }
 

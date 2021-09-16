@@ -35,7 +35,7 @@ export default class Enrollment extends BaseEntity {
     this.birthday = data.birthday;
     this.phone = data.phone;
     this.userId = data.userId;
-    this.image = data.image;
+    this.image = data.image || "";
 
     this.address ||= Address.create();
     const { address } = this;
@@ -60,7 +60,7 @@ export default class Enrollment extends BaseEntity {
     enrollment.populateFromData(data);
     await enrollment.save();
 
-    enrollment.address.enrollmentId = enrollment.id;
+    enrollment.address.enrollment = enrollment;
     await enrollment.address.save();
 
     return enrollment;

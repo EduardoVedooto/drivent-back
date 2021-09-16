@@ -79,3 +79,17 @@ describe("POST /users", () => {
     expect(usersDatabase.length).toEqual(0);
   });
 });
+
+describe("POST /users/reset-password", () => {
+  it("should returns status 400 (Bad request), when email is not a valid email", async () => {
+    const response = await agent.post("/users/reset-password").send({ email: "Invalid email here" });
+
+    expect(response.statusCode).toEqual(httpStatus.BAD_REQUEST);
+  });
+
+  it("should returns status 201 (OK), when email is valid", async () => {
+    const response = await agent.post("/users/reset-password").send({ email: faker.internet.email() });
+
+    expect(response.statusCode).toEqual(httpStatus.OK);
+  });
+});

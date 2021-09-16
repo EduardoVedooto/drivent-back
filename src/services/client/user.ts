@@ -25,14 +25,14 @@ export async function resetPassword(email: string) {
     const token = uuid();
     await requestNewPassword.insert({ email, token });
     const html = `
-      <h1>Olá, somos o suport da Drivent</h1>
+      <h1>Olá, somos o suporte da Drivent</h1>
       <h3>
         <strong>
           Vimos que você solicitou a alteração de sua senha cadastrada. <br />
           Para continuar com o processo de alteração cadastral, acesse o link abaixo.
         </strong>
       </h3><br />
-      <a href="http://localhost:3000/reset-password/${token}">Clique aqui</a><br /><br />
+      <a href="${process.env.CLIENT_BASE_URL}/reset-password/${token}">Clique aqui</a><br /><br />
       <span>Caso não tenha sido você, desconsidere este email!</span>
     `;
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);

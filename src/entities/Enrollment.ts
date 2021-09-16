@@ -53,7 +53,7 @@ export default class Enrollment extends BaseEntity {
     let enrollment = await this.findOne({ where: { cpf: data.cpf } });
 
     if(enrollment && enrollment.userId !== data.userId) {
-      throw new CpfNotAvailableError(data.cpf>);
+      throw new CpfNotAvailableError(data.cpf);
     }
     
     await getManager().transaction(async transactionalEntityManager => {

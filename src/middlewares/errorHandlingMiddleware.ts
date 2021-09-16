@@ -15,6 +15,7 @@ import InvalidDate from "@/errors/InvalidDate";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
 import InvalidPasswordTokenError from "@/errors/InvalidPasswordTokenError";
 import PasswordTokenExpiredError from "@/errors/PasswordTokenExpiredError";
+import CannotGetCertificate from "@/errors/CannotGetCertificate";
 import ActivityEnrollmentAlreadyExists from "@/errors/ActivityEnrollmentAlreadyExists";
 import ConflictBetweenActivities from "@/errors/ConflictBetweenActivities";
 
@@ -108,6 +109,12 @@ export default function errorHandlingMiddleware(
     return res
       .status(httpStatus.BAD_REQUEST)
       .send({ message: err.message });
+  }
+
+  if(err instanceof CannotGetCertificate) {
+    return res
+      .status(httpStatus.NOT_ACCEPTABLE)
+      .send({ message: err.message, details: err.details, driventCode: err.driventCode });
   }
 
   if(err instanceof ActivityEnrollmentAlreadyExists) {

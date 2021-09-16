@@ -23,6 +23,9 @@ export default class Enrollment extends BaseEntity {
   @Column()
   userId: number;
 
+  @Column()
+  image: string;
+
   @OneToOne(() => Address, (address) => address.enrollment, { eager: true })
   address: Address;
 
@@ -32,6 +35,7 @@ export default class Enrollment extends BaseEntity {
     this.birthday = data.birthday;
     this.phone = data.phone;
     this.userId = data.userId;
+    this.image = data.image || "";
 
     this.address ||= Address.create();
     const { address } = this;

@@ -4,6 +4,7 @@ import httpStatus from "http-status";
 import InvalidEmailError from "@/errors/InvalidEmail";
 import CannotEnrollBeforeStartDateError from "@/errors/CannotEnrollBeforeStartDate";
 import InvalidDataError from "@/errors/InvalidData";
+import InvalidPasswordError from "@/errors/InvalidPassword";
 import ConflictError from "@/errors/ConflictError";
 import UnauthorizedError from "@/errors/Unauthorized";
 import NotFoundError from "@/errors/NotFoundError";
@@ -12,6 +13,8 @@ import AlreadyPaidBooking from "@/errors/AlreadyPaidBooking";
 import CannotPickHotelError from "@/errors/CannotPickHotelError";
 import InvalidDate from "@/errors/InvalidDate";
 import NotAllowedUpdateBooking from "@/errors/NotAllowedUpdateBooking";
+import InvalidPasswordTokenError from "@/errors/InvalidPasswordTokenError";
+import PasswordTokenExpiredError from "@/errors/PasswordTokenExpiredError";
 import CannotGetCertificate from "@/errors/CannotGetCertificate";
 import ActivityEnrollmentAlreadyExists from "@/errors/ActivityEnrollmentAlreadyExists";
 import ConflictBetweenActivities from "@/errors/ConflictBetweenActivities";
@@ -35,6 +38,24 @@ export default function errorHandlingMiddleware(
     });
   }
 
+  if (err instanceof InvalidPasswordError) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
+
+  if (err instanceof InvalidPasswordTokenError) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
+
+  if (err instanceof PasswordTokenExpiredError) {
+    return res.status(httpStatus.GONE).send({
+      message: err.message
+    });
+  }
+  
   if (err instanceof InvalidDataError) {
     return res.status(httpStatus.UNPROCESSABLE_ENTITY).send({
       message: err.message,
